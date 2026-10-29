@@ -23,7 +23,7 @@ jobs:
 
       - name: Probe All 12 Portals & Record Ledger
         run: |
-          python3 - << 'PYEOF'
+          python3 - << 'INNEREOF'
           import urllib.request, json, time, datetime
 
           USER = "amrtorky"
@@ -105,7 +105,7 @@ jobs:
           print(f"Probe completed. Online: {report['successful']}/{report['total_probed']}")
           if has_failure:
               exit(1)
-          PYEOF
+          INNEREOF
 
       - name: Export GitHub Step Summary
         run: cat step_summary.md >> $GITHUB_STEP_SUMMARY
