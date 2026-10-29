@@ -235,5 +235,39 @@
       }
     }
   </script>
+
+  <script>
+    // Ingest certified mesh health telemetry
+    fetch("./mesh_health_latest.json")
+      .then(res => res.json())
+      .then(telemetry => {
+        if (!telemetry || !telemetry.nodes) return;
+        telemetry.nodes.forEach(node => {
+          portals.forEach((p, idx) => {
+            if (p.name === node.repo) {
+              const statusEl = document.getElementById(`status-${idx}`);
+              if (statusEl) {
+                if (node.healthy) {
+                  statusEl.className = "status-tag status-online";
+                  statusEl.innerHTML = `<span class="pulse-dot"></span> 200 OK (${node.latency_ms}ms)`;
+                } else {
+                  statusEl.className = "status-tag status-offline";
+                  statusEl.innerHTML = `<span class="pulse-dot"></span> Offline`;
+                }
+              }
+            }
+          });
+        });
+        const headerInfo = document.querySelector(".header-meta, .meta, header");
+        if (headerInfo) {
+          const badge = document.createElement("div");
+          badge.style.cssText = "font-family:monospace;font-size:0.8rem;color:#00ff88;margin-top:0.5rem;";
+          badge.textContent = `[ISO/IEC 17025 Certified: ${telemetry.iso_iec_17025_cert} | Mesh Health: ${telemetry.successful}/${telemetry.total_probed}]`;
+          headerInfo.appendChild(badge);
+        }
+      })
+      .catch(err => console.warn("Live telemetry ledger read fallback:", err));
+  </script>
 </body>
+
 </html>
