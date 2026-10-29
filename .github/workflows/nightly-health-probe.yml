@@ -1,112 +1,60 @@
 name: Nightly Ecosystem Health Probe
-
 on:
   schedule:
-    - cron: "0 0 * * *"
+    - cron: '0 0 * * *'
   workflow_dispatch:
-
 jobs:
   probe-mesh:
     name: Probe 12 Sovereign Portals
     runs-on: ubuntu-latest
     permissions:
       contents: write
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
-
-      - name: Probe All 12 Portals & Record Ledger
+          python-version: '3.12'
+      - name: Probe Portals
         run: |
-          python3 -c "
+          python3 -c '
           import urllib.request, json, time, datetime, sys
-
-          USER = "amrtorky"
-          repos = [
-              "torky-engine-appliance",
-              "torky-core-continuum",
-              "torky-quantum-bridge",
-              "torky-cardano-solver",
-              "torky-ast-metacompiler",
-              "torky-silicon-kernels",
-              "torky-ipc-daemon",
-              "torky-lakehouse-bridges",
-              "torky-hardware-simulator",
-              "torky-ontology-security",
-              "torky-workspace-ui",
-              "torky-governance-specs"
-          ]
-
-          timestamp = datetime.datetime.now(datetime.timezone.utc).isoformat()
-          report = {
-              "timestamp": timestamp,
-              "iso_iec_17025_cert": "1dd69a153b00",
-              "total_probed": len(repos),
-              "successful": 0,
-              "failed": 0,
-              "nodes": []
-          }
-
-          markdown_lines = [
-              f"### Sovereign Mesh Nightly Probe --- {timestamp}",
-              "",
-              "| Repository | HTTP Status | Latency (ms) | Target URL |",
-              "|:---|:---:|:---:|:---|"
-          ]
-
-          has_failure = False
+          repos = ["torky-engine-appliance", "torky-core-continuum", "torky-quantum-bridge", "torky-cardano-solver", "torky-ast-metacompiler", "torky-silicon-kernels", "torky-ipc-daemon", "torky-lakehouse-bridges", "torky-hardware-simulator", "torky-ontology-security", "torky-workspace-ui", "torky-governance-specs"]
+          user = "amrtorky"
+          report = {"timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(), "nodes": []}
+          lines = ["### Mesh Health Probe", "", "| Repo | Status | Latency |", "|:---|:---|:---|"]
+          failed = False
           for r in repos:
-              url = f"https://{USER}.github.io/{r}/"
+              u = f\"https://{user}.github.io/{r}/\"
               t0 = time.perf_counter()
-              status_code = 0
+              status = 0
               try:
-                  req = urllib.request.Request(url, headers={"User-Agent": "Torky-Mesh-Probe/1.0"})
-                  with urllib.request.urlopen(req, timeout=10) as resp:
-                      status_code = resp.status
+                  req = urllib.request.Request(u, headers={'User-Agent': 'TorkyProbe/1.0'})
+                 with urllib.request.urlopen(req, timeout=10) as resp:
+                      status = resp.status
               except Exception as e:
-                  status_code = getattr(e, "code", 500)
-
+                  status = getattr(e, 'code', 500)
               lat = round((time.perf_counter() - t0) * 1000, 2)
-              is_up = (status_code == 200)
-              if is_up:
-                  report["successful"] += 1
-              else:
-                  report["failed"] += 1
-                  has_failure = True
-
-              report["nodes"].append({"repo": r, "status": status_code, "latency_ms": lat, "healthy": is_up})
-              badge = "200 OK" if is_up else str(status_code)
-              markdown_lines.append(f"| `{r}` | {badge} | {lat} | [{url}]({url}) |")
-
+              if status != 200: failed = True
+              report["nodes"].Append({"repo": r, "status": status, "lat_ms": lat})
+              lines.append(f"| `{r}` | {status} | {lat} ms |")
           with open("docs/mesh_health_latest.json", "w") as f:
               json.dump(report, f, indent=2)
-
-          summary_text = "\n".join(markdown_lines)
           with open("docs/UPTIME_HISTORY.md", "a") as f:
-              f.write(summary_text + "\n\n---\n\n")
-
-          with open("step_summary.md", "w") as f:
-              f.write(summary_text)
-
-          print(f"Probe finished. Healthy: {report['successful']}/{report['total_probed']}")
-          if has_failure:
-              sys.exit(1)
-          "
-
-      - name: Record Step Summary
-        run: cat step_summary.md >> $GITHUB_STEP_SUMMARY 2>/dev/null || true
-
-      - name: Commit & Push Health Ledger
+              f.write("\n".join(lines) + "\n\n---\n\n")
+          with open("summary.md", "w") as f:
+              f.write("\n".join(lines))
+          if failed: sys.exit(1)
+          '
+      - name: Record Summary
+        run: cat summary.md >> $GITHUB_STEP_SUMMARY 2>/dev/null || true
+      - name: Commit Ledger
         run: |
           git config user.name "torky-mesh-bot"
           git config user.email "bot@amrtorky-institute.org"
           git add docs/mesh_health_latest.json docs/UPTIME_HISTORY.md
           if ! git diff --staged --quiet; then
-            git commit -m "chore(telemetry): update mesh health ledger [skip ci]"
+            git commit -m "chore(telemetry): update mesh ledger [skip ci]"
             git push origin main
           fi
