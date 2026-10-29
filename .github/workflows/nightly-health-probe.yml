@@ -1,7 +1,7 @@
 name: Nightly Ecosystem Health Probe
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: "0 0 * * *"
   workflow_dispatch:
 jobs:
   probe-mesh:
@@ -15,46 +15,15 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
-      - name: Probe Portals
-        run: |
-          python3 -c '
-          import urllib.request, json, time, datetime, sys
-          repos = ["torky-engine-appliance", "torky-core-continuum", "torky-quantum-bridge", "torky-cardano-solver", "torky-ast-metacompiler", "torky-silicon-kernels", "torky-ipc-daemon", "torky-lakehouse-bridges", "torky-hardware-simulator", "torky-ontology-security", "torky-workspace-ui", "torky-governance-specs"]
-          user = "amrtorky"
-          report = {"timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(), "nodes": []}
-          lines = ["### Mesh Health Probe", "", "| Repo | Status | Latency |", "|:---|:---|:---|"]
-          failed = False
-          for r in repos:
-              u = f\"https://{user}.github.io/{r}/\"
-              t0 = time.perf_counter()
-              status = 0
-              try:
-                  req = urllib.request.Request(u, headers={'User-Agent': 'TorkyProbe/1.0'})
-                 with urllib.request.urlopen(req, timeout=10) as resp:
-                      status = resp.status
-              except Exception as e:
-                  status = getattr(e, 'code', 500)
-              lat = round((time.perf_counter() - t0) * 1000, 2)
-              if status != 200: failed = True
-              report["nodes"].Append({"repo": r, "status": status, "lat_ms": lat})
-              lines.append(f"| `{r}` | {status} | {lat} ms |")
-          with open("docs/mesh_health_latest.json", "w") as f:
-              json.dump(report, f, indent=2)
-          with open("docs/UPTIME_HISTORY.md", "a") as f:
-              f.write("\n".join(lines) + "\n\n---\n\n")
-          with open("summary.md", "w") as f:
-              f.write("\n".join(lines))
-          if failed: sys.exit(1)
-          '
-      - name: Record Summary
-        run: cat summary.md >> $GITHUB_STEP_SUMMARY 2>/dev/null || true
-      - name: Commit Ledger
+          python-version: "3.12"
+      - name: Run Mesh Health Probe
+        run: python3 probe.py
+      - name: Commit and Push Ledger
         run: |
           git config user.name "torky-mesh-bot"
           git config user.email "bot@amrtorky-institute.org"
           git add docs/mesh_health_latest.json docs/UPTIME_HISTORY.md
           if ! git diff --staged --quiet; then
-            git commit -m "chore(telemetry): update mesh ledger [skip ci]"
+            git commit -m "chore(telemetry): update mesh health ledger [skip ci]"
             git push origin main
           fi
