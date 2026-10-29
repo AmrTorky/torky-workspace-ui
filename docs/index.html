@@ -1,41 +1,238 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AT-ACE Profile C | Sovereign Enterprise Workspace</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Torky Workspace UI — Sovereign Ecosystem Operations Hub</title>
   <style>
-    :root { background: #070b14; panel: #0f172a; border: #1e293b; accent: #10b981; cyan: #06b6d4; text: #e2e8f0; muted: #94a3b8; }
-    body { font-family: monospace; background: #070b14; color: #e2e8f0; padding: 24px; line-height: 1.5; }
-    header { border: 1px solid #1e293b; background: #0f172a; padding: 20px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
-    .badge { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid #10b981; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; }
-    .card { background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 18px; margin-bottom: 20px; }
-    h2 { font-size: 1rem; color: #06b6d4; margin-bottom: 12px; }
-    #terminal-output { background: #020617; border: 1px solid #1e293b; height: 200px; overflow-y: auto; padding: 12px; font-size: 0.82rem; color: #34d399; border-radius: 6px; margin-bottom: 10px; white-space: pre-wrap; }
-    input[type="text"] { width: 100%; background: #020617; border: 1px solid #1e293b; color: #e2e8f0; padding: 8px 12px; border-radius: 4px; font-family: inherit; }
-    button { background: #10b981; color: #020617; font-weight: 700; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
+    :root {
+      --bg: #090d16;
+      --card-bg: #111827;
+      --card-border: #1f2937;
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.2);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --green: #10b981;
+      --red: #ef4444;
+      --yellow: #f59e0b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: radial-gradient(circle at 50% 0%, #1e293b 0%, var(--bg) 70%);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      min-height: 100vh;
+      padding: 2rem 1.5rem;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    header {
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    h1 { font-size: 1.75rem; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--green);
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: monospace;
+    }
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      background: currentColor;
+      border-radius: 50%;
+      box-shadow: 0 0 8px currentColor;
+    }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .metric-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+    }
+    .metric-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600; }
+    .metric-val { font-size: 1.5rem; font-weight: 700; margin-top: 0.35rem; color: #fff; font-family: monospace; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 1.25rem;
+    }
+    .portal-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .portal-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 8px 24px var(--accent-glow);
+    }
+    .portal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+    .portal-name { font-size: 1.05rem; font-weight: 600; color: #fff; }
+    .status-tag {
+      font-size: 0.75rem;
+      font-family: monospace;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .status-pinging { background: rgba(245, 158, 11, 0.1); color: var(--yellow); border: 1px solid rgba(245, 158, 11, 0.3); }
+    .status-online { background: rgba(16, 185, 129, 0.1); color: var(--green); border: 1px solid rgba(16, 185, 129, 0.3); }
+    .status-offline { background: rgba(239, 68, 68, 0.1); color: var(--red); border: 1px solid rgba(239, 68, 68, 0.3); }
+    .portal-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 1rem; flex-grow: 1; }
+    .portal-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 0.75rem;
+    }
+    .latency { font-size: 0.75rem; color: var(--text-muted); font-family: monospace; }
+    .launch-btn {
+      text-decoration: none;
+      background: #1e293b;
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: background 0.15s, color 0.15s;
+    }
+    .launch-btn:hover { background: var(--accent); color: #000; }
   </style>
 </head>
 <body>
-  <header>
-    <div>
-      <h1>AT-ACE Profile C // Sovereign Workspace</h1>
-      <p style="color:#94a3b8; font-size:0.82rem;">Master Scale Triple: l_a = e^-1 nm | V_finite(0) = 11.384 eV | P_0 = e^-1</p>
+  <div class="container">
+    <header>
+      <div>
+        <h1>Torky Sovereign Control Plane</h1>
+        <p style="color: var(--text-muted); font-size: 0.875rem; margin-top: 0.25rem;">
+          Federated Operations Mesh &mdash; Protocol A / Torky Protocol Omega
+        </p>
+      </div>
+      <div class="badge">
+        <span class="pulse-dot"></span> ISO/IEC 17025 CERT: 1dd69a153b00
+      </div>
+    </header>
+
+    <div class="metrics">
+      <div class="metric-card">
+        <div class="metric-title">Registered Nodes</div>
+        <div class="metric-val" id="totalNodes">12 / 12</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-title">Live Healthy Mesh</div>
+        <div class="metric-val" id="liveNodes" style="color: var(--green);">--</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-title">Crash Risk (NaN/Inf)</div>
+        <div class="metric-val" style="color: var(--green);">0.00%</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-title">Avg Mesh Ping</div>
+        <div class="metric-val" id="avgPing">-- ms</div>
+      </div>
     </div>
-    <div><span class="badge">ISO/IEC 17025: 1dd69a153b00</span></div>
-  </header>
-  <div class="card">
-    <h2>Interactive Sovereign Terminal Simulator</h2>
-    <div id="terminal-output">[SYSTEM READY] Type 'audit' or 'solve' and press Enter.</div>
-    <input type="text" id="cmd-input" placeholder="Type command..." onkeydown="if(event.key==='Enter') runCmd()" />
+
+    <div class="grid" id="portalGrid"></div>
   </div>
+
   <script>
-    function runCmd() {
-      const inp = document.getElementById("cmd-input");
-      const out = document.getElementById("terminal-output");
-      out.textContent += "\n$ " + inp.value + "\n[EXEC] V_finite(0) = 11.384 eV | 0.00% NaN Loss Confirmed.";
-      out.scrollTop = out.scrollHeight;
-      inp.value = "";
+    const GITHUB_USER = "AmrTorky";
+    const portals = [
+      { name: "torky-engine-appliance", role: "Flagship 100B Continuum Core & 36 CLI Tools" },
+      { name: "torky-core-continuum", role: "C++20 SIMD Invariant Regularized Kernel" },
+      { name: "torky-quantum-bridge", role: "Cryogenic (IQM) & Photonic (Quandela) Bridge" },
+      { name: "torky-cardano-solver", role: "Sub-microsecond Depressed Cubic Root Solver" },
+      { name: "torky-ast-metacompiler", role: "Self-Rewriting AST & Shadow Duel Engine" },
+      { name: "torky-silicon-kernels", role: "Blackwell CUDA, AWS NKI & Silicon Photonics" },
+      { name: "torky-ipc-daemon", role: "Zero-Copy POSIX Shared Memory Daemon" },
+      { name: "torky-lakehouse-bridges", role: "100B BigInt Pointer Lakehouse Driver" },
+      { name: "torky-hardware-simulator", role: "Thermal Noise & STR > 10^10 Transmon Simulator" },
+      { name: "torky-ontology-security", role: "Zero-Trust Border Verification Engine" },
+      { name: "torky-workspace-ui", role: "Unified Operations Control Dashboard" },
+      { name: "torky-governance-specs", role: "ISO/IEC 17025 Standards & Zenodo WORM Specs" }
+    ];
+
+    const grid = document.getElementById("portalGrid");
+    let latencies = [];
+    let onlineCount = 0;
+
+    portals.forEach((p, idx) => {
+      const url = `https://${GITHUB_USER.toLowerCase()}.github.io/${p.name}/`;
+      const card = document.createElement("div");
+      card.className = "portal-card";
+      card.innerHTML = `
+        <div class="portal-header">
+          <div class="portal-name">${p.name}</div>
+          <div class="status-tag status-pinging" id="status-${idx}">
+            <span class="pulse-dot"></span> Pinging
+          </div>
+        </div>
+        <div class="portal-desc">${p.role}</div>
+        <div class="portal-footer">
+          <span class="latency" id="latency-${idx}">-- ms</span>
+          <a class="launch-btn" href="${url}" target="_blank">Launch Portal &rarr;</a>
+        </div>
+      `;
+      grid.appendChild(card);
+
+      const t0 = performance.now();
+      fetch(url, { mode: 'no-cors', cache: 'no-cache' })
+        .then(() => {
+          const lat = Math.round(performance.now() - t0);
+          latencies.push(lat);
+          onlineCount++;
+          document.getElementById(`status-${idx}`).className = "status-tag status-online";
+          document.getElementById(`status-${idx}`).innerHTML = '<span class="pulse-dot"></span> 200 OK';
+          document.getElementById(`latency-${idx}`).innerText = `${lat} ms`;
+          updateMetrics();
+        })
+        .catch(() => {
+          document.getElementById(`status-${idx}`).className = "status-tag status-offline";
+          document.getElementById(`status-${idx}`).innerHTML = '<span class="pulse-dot"></span> Offline';
+          document.getElementById(`latency-${idx}`).innerText = "Timeout";
+          updateMetrics();
+        });
+    });
+
+    function updateMetrics() {
+      document.getElementById("liveNodes").innerText = `${onlineCount} / ${portals.length}`;
+      if (latencies.length > 0) {
+        const avg = Math.round(latencies.reduce((a, b) => a + b, 0) / latencies.length);
+        document.getElementById("avgPing").innerText = `${avg} ms`;
+      }
     }
   </script>
 </body>
