@@ -54,7 +54,7 @@ for r in repos:
         has_failure = True
 
     report["nodes"].append({"repo": r, "status": status_code, "latency_ms": lat, "healthy": is_up})
-    badge = "🟢 200 OK" if is_up else f"🔴 {status_code}"
+    badge = "200 OK" if is_up else str(status_code)
     lines.append(f"| `{r}` | {badge} | {lat} | [{url}]({url}) |")
 
 with open("docs/mesh_health_latest.json", "w") as f:
@@ -64,6 +64,6 @@ out = "\n".join(lines)
 with open("docs/UPTIME_HISTORY.md", "a") as f:
     f.write(out + "\n\n---\n\n")
 
-print(f"Probe finished: {report['successful']}/{report['total_probed']} healthy.")
+print(f"Probe finished: {report[successful]}/{report[total_probed]} healthy.")
 if has_failure:
     sys.exit(1)

@@ -1,23 +1,29 @@
 name: Nightly Ecosystem Health Probe
+
 on:
   schedule:
     - cron: "0 0 * * *"
   workflow_dispatch:
+
 jobs:
   probe-mesh:
     name: Probe 12 Sovereign Portals
     runs-on: ubuntu-latest
     permissions:
       contents: write
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
       - name: Run Mesh Health Probe
         run: python3 probe.py
+
       - name: Commit and Push Ledger
         run: |
           git config user.name "torky-mesh-bot"
