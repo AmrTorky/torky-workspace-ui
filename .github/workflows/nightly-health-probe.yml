@@ -2,7 +2,7 @@ name: Nightly Ecosystem Health Probe
 
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: "0 0 * * *"
   workflow_dispatch:
 
 jobs:
@@ -19,11 +19,11 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: Probe All 12 Portals & Record Ledger
         run: |
-          python3 - c '
+          python3 -c "
           import urllib.request, json, time, datetime, sys
 
           USER = "amrtorky"
@@ -55,21 +55,21 @@ jobs:
           markdown_lines = [
               f"### Sovereign Mesh Nightly Probe --- {timestamp}",
               "",
-              "| Repository | HTTP Code | Latency (ms) | URL |",
+              "| Repository | HTTP Status | Latency (ms) | Target URL |",
               "|:---|:---:|:---:|:---|"
           ]
 
           has_failure = False
           for r in repos:
-              url = f\"https://{USER}.github.io/{r}/\"
+              url = f"https://{USER}.github.io/{r}/"
               t0 = time.perf_counter()
               status_code = 0
               try:
-                  req = urllib.request.Request(url, headers={'User-Agent': 'Torky-Mesh-Probe/1.0'})
+                  req = urllib.request.Request(url, headers={"User-Agent": "Torky-Mesh-Probe/1.0"})
                   with urllib.request.urlopen(req, timeout=10) as resp:
                       status_code = resp.status
               except Exception as e:
-                  status_code = getattr(e, 'code', 500)
+                  status_code = getattr(e, "code", 500)
 
               lat = round((time.perf_counter() - t0) * 1000, 2)
               is_up = (status_code == 200)
@@ -80,30 +80,33 @@ jobs:
                   has_failure = True
 
               report["nodes"].append({"repo": r, "status": status_code, "latency_ms": lat, "healthy": is_up})
-              badge = "⟝ 200 OK" if is_up else f"🔩 {status_code}"
+              badge = "200 OK" if is_up else str(status_code)
               markdown_lines.append(f"| `{r}` | {badge} | {lat} | [{url}]({url}) |")
 
           with open("docs/mesh_health_latest.json", "w") as f:
               json.dump(report, f, indent=2)
 
-          out = "\n".join(markdown_lines)
-          with open("docs/UPTIME_HISTORY.md", "a") as f\"
-              f.write(out + "\n\n---\n\n")
+          summary_text = "\n".join(markdown_lines)
+          with open("docs/UPTIME_HISTORY.md", "a") as f:
+              f.write(summary_text + "\n\n---\n\n")
+
           with open("step_summary.md", "w") as f:
-              f.write(out)
+              f.write(summary_text)
 
           print(f"Probe finished. Healthy: {report['successful']}/{report['total_probed']}")
-          if has_failure: sys.exit(1)
-          '
-      - name: Record GITHUB_STEP_SUMMARy
-        run: cat step_summary.md >> $GITRUB_STEP_SUMMARY 2>/dev/null || true
+          if has_failure:
+              sys.exit(1)
+          "
 
-      - name: Commit and Push Ledger
+      - name: Record Step Summary
+        run: cat step_summary.md >> $GITHUB_STEP_SUMMARY 2>/dev/null || true
+
+      - name: Commit & Push Health Ledger
         run: |
           git config user.name "torky-mesh-bot"
           git config user.email "bot@amrtorky-institute.org"
           git add docs/mesh_health_latest.json docs/UPTIME_HISTORY.md
           if ! git diff --staged --quiet; then
-            git commit -m "chore(telemetry): new mesh probe ledger [skip ci]"
+            git commit -m "chore(telemetry): update mesh health ledger [skip ci]"
             git push origin main
           fi
