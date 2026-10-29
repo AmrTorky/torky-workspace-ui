@@ -74,3 +74,22 @@
 
 ---
 
+### Sovereign Mesh Nightly Probe --- 2026-10-29T22:00:01.813330+00:00
+
+| Repository | HTTP Status | Latency (ms) | Target URL |
+|:---|:---:|:---:|:---|
+| `torky-engine-appliance` | 🟢 200 OK | 461.45 | [https://amrtorky.github.io/torky-engine-appliance/](https://amrtorky.github.io/torky-engine-appliance/) |
+| `torky-core-continuum` | 🟢 200 OK | 5597.93 | [https://amrtorky.github.io/torky-core-continuum/](https://amrtorky.github.io/torky-core-continuum/) |
+| `torky-quantum-bridge` | 🟢 200 OK | 451.5 | [https://amrtorky.github.io/torky-quantum-bridge/](https://amrtorky.github.io/torky-quantum-bridge/) |
+| `torky-cardano-solver` | 🟢 200 OK | 453.93 | [https://amrtorky.github.io/torky-cardano-solver/](https://amrtorky.github.io/torky-cardano-solver/) |
+| `torky-ast-metacompiler` | 🟢 200 OK | 1055.27 | [https://amrtorky.github.io/torky-ast-metacompiler/](https://amrtorky.github.io/torky-ast-metacompiler/) |
+| `torky-silicon-kernels` | 🟢 200 OK | 708.46 | [https://amrtorky.github.io/torky-silicon-kernels/](https://amrtorky.github.io/torky-silicon-kernels/) |
+| `torky-ipc-daemon` | 🟢 200 OK | 662.16 | [https://amrtorky.github.io/torky-ipc-daemon/](https://amrtorky.github.io/torky-ipc-daemon/) |
+| `torky-lakehouse-bridges` | 🟢 200 OK | 553.93 | [https://amrtorky.github.io/torky-lakehouse-bridges/](https://amrtorky.github.io/torky-lakehouse-bridges/) |
+| `torky-hardware-simulator` | 🟢 200 OK | 798.12 | [https://amrtorky.github.io/torky-hardware-simulator/](https://amrtorky.github.io/torky-hardware-simulator/) |
+| `torky-ontology-security` | 🟢 200 OK | 425.58 | [https://amrtorky.github.io/torky-ontology-security/](https://amrtorky.github.io/torky-ontology-security/) |
+| `torky-workspace-ui` | 🟢 200 OK | 1444.36 | [https://amrtorky.github.io/torky-workspace-ui/](https://amrtorky.github.io/torky-workspace-ui/) |
+| `torky-governance-specs` | 🟢 200 OK | 489.61 | [https://amrtorky.github.io/torky-governance-specs/](https://amrtorky.github.io/torky-governance-specs/) |
+
+---
+
