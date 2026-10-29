@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-29T17:12:21.676376+00:00",
+  "timestamp": "2026-10-29T17:34:07.628161+00:00",
   "iso_iec_17025_cert": "1dd69a153b00",
   "total_probed": 12,
   "successful": 12,
@@ -8,73 +8,73 @@
     {
       "repo": "torky-engine-appliance",
       "status": 200,
-      "latency_ms": 507.39,
+      "latency_ms": 431.56,
       "healthy": true
     },
     {
       "repo": "torky-core-continuum",
       "status": 200,
-      "latency_ms": 435.07,
+      "latency_ms": 387.58,
       "healthy": true
     },
     {
       "repo": "torky-quantum-bridge",
       "status": 200,
-      "latency_ms": 389.23,
+      "latency_ms": 374.39,
       "healthy": true
     },
     {
       "repo": "torky-cardano-solver",
       "status": 200,
-      "latency_ms": 383.57,
+      "latency_ms": 376.16,
       "healthy": true
     },
     {
       "repo": "torky-ast-metacompiler",
       "status": 200,
-      "latency_ms": 405.06,
+      "latency_ms": 364.17,
       "healthy": true
     },
     {
       "repo": "torky-silicon-kernels",
       "status": 200,
-      "latency_ms": 406.65,
+      "latency_ms": 619.26,
       "healthy": true
     },
     {
       "repo": "torky-ipc-daemon",
       "status": 200,
-      "latency_ms": 366.67,
+      "latency_ms": 364.95,
       "healthy": true
     },
     {
       "repo": "torky-lakehouse-bridges",
       "status": 200,
-      "latency_ms": 375.4,
+      "latency_ms": 584.23,
       "healthy": true
     },
     {
       "repo": "torky-hardware-simulator",
       "status": 200,
-      "latency_ms": 406.17,
+      "latency_ms": 720.73,
       "healthy": true
     },
     {
       "repo": "torky-ontology-security",
       "status": 200,
-      "latency_ms": 533.44,
+      "latency_ms": 558.29,
       "healthy": true
     },
     {
       "repo": "torky-workspace-ui",
       "status": 200,
-      "latency_ms": 375.49,
+      "latency_ms": 367.95,
       "healthy": true
     },
     {
       "repo": "torky-governance-specs",
       "status": 200,
-      "latency_ms": 384.09,
+      "latency_ms": 659.14,
       "healthy": true
     }
   ]
