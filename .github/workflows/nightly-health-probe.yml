@@ -23,8 +23,8 @@ jobs:
 
       - name: Probe All 12 Portals & Record Ledger
         run: |
-          python3 - << 'INNEREOF'
-          import urllib.request, json, time, datetime
+          python3 - c '
+          import urllib.request, json, time, datetime, sys
 
           USER = "amrtorky"
           repos = [
@@ -53,28 +53,25 @@ jobs:
           }
 
           markdown_lines = [
-              f"### Sovereign Mesh Nightly Probe — {timestamp}",
+              f"### Sovereign Mesh Nightly Probe --- {timestamp}",
               "",
-              "| Repository | HTTP Status | Latency (ms) | Target URL |",
+              "| Repository | HTTP Code | Latency (ms) | URL |",
               "|:---|:---:|:---:|:---|"
           ]
 
           has_failure = False
-
-          for repo in repos:
-              url = f"https://{USER}.github.io/{repo}/"
+          for r in repos:
+              url = f\"https://{USER}.github.io/{r}/\"
               t0 = time.perf_counter()
               status_code = 0
-              latency_ms = 0
               try:
-                  req = urllib.request.Request(url, headers={'User-Agent': 'Torky-Mesh-Health-Bot/1.0'})
+                  req = urllib.request.Request(url, headers={'User-Agent': 'Torky-Mesh-Probe/1.0'})
                   with urllib.request.urlopen(req, timeout=10) as resp:
                       status_code = resp.status
-                      latency_ms = round((time.perf_counter() - t0) * 1000, 2)
               except Exception as e:
                   status_code = getattr(e, 'code', 500)
-                  latency_ms = round((time.perf_counter() - t0) * 1000, 2)
 
+              lat = round((time.perf_counter() - t0) * 1000, 2)
               is_up = (status_code == 200)
               if is_up:
                   report["successful"] += 1
@@ -82,42 +79,31 @@ jobs:
                   report["failed"] += 1
                   has_failure = True
 
-              report["nodes"].append({
-                  "repo": repo,
-                  "status": status_code,
-                  "latency_ms": latency_ms,
-                  "healthy": is_up
-              })
-
-              status_badge = "🟢 200 OK" if is_up else f"🔴 {status_code}"
-              markdown_lines.append(f"| `{repo}` | {status_badge} | {latency_ms} | [{url}]({url}) |")
+              report["nodes"].append({"repo": r, "status": status_code, "latency_ms": lat, "healthy": is_up})
+              badge = "⟝ 200 OK" if is_up else f"🔩 {status_code}"
+              markdown_lines.append(f"| `{r}` | {badge} | {lat} | [{url}]({url}) |")
 
           with open("docs/mesh_health_latest.json", "w") as f:
               json.dump(report, f, indent=2)
 
-          summary_text = "\n".join(markdown_lines)
-          with open("docs/UPTIME_HISTORY.md", "a") as f:
-              f.write(summary_text + "\n\n---\n\n")
-
+          out = "\n".join(markdown_lines)
+          with open("docs/UPTIME_HISTORY.md", "a") as f\"
+              f.write(out + "\n\n---\n\n")
           with open("step_summary.md", "w") as f:
-              f.write(summary_text)
+              f.write(out)
 
-          print(f"Probe completed. Online: {report['successful']}/{report['total_probed']}")
-          if has_failure:
-              exit(1)
-          INNEREOF
+          print(f"Probe finished. Healthy: {report['successful']}/{report['total_probed']}")
+          if has_failure: sys.exit(1)
+          '
+      - name: Record GITHUB_STEP_SUMMARy
+        run: cat step_summary.md >> $GITRUB_STEP_SUMMARY 2>/dev/null || true
 
-      - name: Export GitHub Step Summary
-        run: cat step_summary.md >> $GITHUB_STEP_SUMMARY
-
-      - name: Commit & Push Health Ledger
+      - name: Commit and Push Ledger
         run: |
           git config user.name "torky-mesh-bot"
           git config user.email "bot@amrtorky-institute.org"
           git add docs/mesh_health_latest.json docs/UPTIME_HISTORY.md
-          if git diff --staged --quiet; then
-            echo "No changes in uptime records."
-          else
-            git commit -m "chore(telemetry): record nightly mesh probe ledger [skip ci]"
+          if ! git diff --staged --quiet; then
+            git commit -m "chore(telemetry): new mesh probe ledger [skip ci]"
             git push origin main
           fi
