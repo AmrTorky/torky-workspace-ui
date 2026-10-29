@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.16)
+project(torky-workspace-ui LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+include_directories(include)
+add_executable(torky-workspace-launch src/torky_cli_kernel.cpp)
+target_compile_options(torky-workspace-launch PRIVATE -O3 -Wall -pthread)
