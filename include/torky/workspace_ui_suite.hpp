@@ -40,7 +40,7 @@ namespace torky::workspace::ui {
                 // 6D Calabi-Yau Quantum Phase Space
                 case 6: return std::cos(coordinate_val * 0.225);
                 // 7D Infinite Gauge Operator Structure (Diff_eps(M))
-                case 7: return std::tanH(coordinate_val) * L_A_NM;
+                case 7: return std::tanh(coordinate_val) * L_A_NM;
                 // 8D Exceptional E8 & Johnson Scheme Topology (DSM-861)
                 case 8: return coordinate_val * coordinate_val - 861.0 / 42.0;
                 // 9D Non-Local Invariant Operator Space ((1 + eps D^2)^-1)
