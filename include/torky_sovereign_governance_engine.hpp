@@ -55,12 +55,12 @@ namespace torky::sovereign::engine {
 // --- WebAssembly extern "C" Linker Wrappers with EMSCRIPTEN_KEEPALIVE ---
 extern "C" {
     EMSCRIPTEN_KEEPALIVE
-    double _evaluate_finite_potential_wasm(double r_nm) {
+    double evaluate_finite_potential_wasm(double r_nm) {
         return torky::sovereign::engine::NonSingularSimdKernel::evaluate_v_finite(r_nm);
     }
 
     EMSCRIPTEN_KEEPALIVE
-    double _solve_cardano_viete_wasm(double p, double q) {
+    double solve_cardano_viete_wasm(double p, double q) {
         return torky::sovereign::engine::CardanoVieteSolver::solve_depressed_cubic(p, q);
     }
 }
