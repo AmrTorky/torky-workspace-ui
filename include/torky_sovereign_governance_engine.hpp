@@ -3,8 +3,6 @@
 
 #include <cmath>
 #include <cstdint>
-#include <array>
-#include <vector>
 #include <algorithm>
 #include <emscripten/emscripten.h>
 
