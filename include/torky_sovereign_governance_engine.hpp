@@ -5,7 +5,8 @@
 #include <cstdint>
 #include <array>
 #include <vector>
-#include <immintrin.h>
+#include <algorithm>
+#include <emscripten/emscripten.h>
 
 namespace torky::sovereign::engine {
 
@@ -31,19 +32,6 @@ namespace torky::sovereign::engine {
         static inline double evaluate_v_finite(double r_nm) {
             return 1.0 / std::sqrt((r_nm * r_nm) + EPSILON_NM2);
         }
-
-        static void evaluate_avx512_batch(const double* __restrict r_in, double* __restrict v_out, size_t n) {
-            __m512d eps_vec = _mm512_set1_pd(EPSILON_NM2);
-            __m512d one_vec = _mm512_set1_pd(1.0);
-            for (size_t i = 0; i < n; i += 8) {
-                __m512d r_vec = _mm512_loadu_pd(&r_in[i]);
-                __m512d r_sq  = _mm512_mul_pd(r_vec, r_vec);
-                __m512d sum   = _mm512_add_pd(r_sq, eps_vec);
-                __m512d root  = _mm512_sqrt_pd(sum);
-                __m512d v_val = _mm512_div_pd(one_vec, root);
-                _mm512_storeu_pd(&v_out[i], v_val);
-            }
-        }
     };
 
     class CardanoVieteSolver {
@@ -65,5 +53,18 @@ namespace torky::sovereign::engine {
     };
 
 } // namespace torky::sovereign::engine
+
+// --- WebAssembly extern "C" Linker Wrappers with EMSCRIPTEN_KEEPALIVE ---
+extern "C" {
+    EMSCRIPTEN_KEEPALIVE
+    double _evaluate_finite_potential_wasm(double r_nm) {
+        return torky::sovereign::engine::NonSingularSimdKernel::evaluate_v_finite(r_nm);
+    }
+
+    EMSCRIPTEN_KEEPALIVE
+    double _solve_cardano_viete_wasm(double p, double q) {
+        return torky::sovereign::engine::CardanoVieteSolver::solve_depressed_cubic(p, q);
+    }
+}
 
 #endif // TORKY_SOVEREIGN_GOVERNANCE_ENGINE_HPP
