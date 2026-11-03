@@ -1,7 +1,7 @@
 {
-  "title": "Amr Torky Autopoietic Continuum Engine - Master Engine Appliance",
-  "conceptdoi": "10.5281/zenodo.22785402",
+  "title": "Amr Torky Universal Workspace UI & 16-Subsystem Orchestration Suite - torky-workspace-ui",
+  "conceptdoi": "10.5281/zenodo.23900809",
   "creators": [{"name": "Torky, Amr", "orcid": "0009-0003-6539-8267", "affiliation": "Amr Torky Institute for Theory of Everything & Theory of Every Code"}],
-  "description": "Production release of the Torky Engine Appliance and local Python IPC daemon bridge for deterministic benchmarks and hardware simulation (v24.0.0-GA).",
+  "description": "Production release v24.0.0-GA unifying all 16 sovereign enterprise repositories and Zenodo DOIs.",
   "access_right": "open", "license": "apache-2.0", "upload_type": "software"
 }
