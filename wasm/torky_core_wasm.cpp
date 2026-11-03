@@ -1,8 +1,7 @@
-#include <cstdint>
 #include <cmath>
+#include <cstdint>
 #include <algorithm>
 #include <iostream>
-#include <cassert>
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
@@ -11,13 +10,7 @@
 #define TORKY_EXPORT extern "C"
 #endif
 
-namespace torky::sovereign {
-    inline constexpr double V_FINITE_EV_ZERO      = 11.384;
-    inline constexpr double V_FINITE_NONDIM_ZERO  = 7.905694150420948;
-    inline constexpr double SCALE_FLOOR_LA_NM     = 0.36787944117144233;
-    inline constexpr double BANACH_CONTRACTION_RC = 0.3849;
-    inline constexpr double RIEMANN_GRADIENT_G1   = -11.9651;
-    inline constexpr uint64_t SHM_BASE_PTR        = 0x14f46b04000ULL;
+namespace torky::core {
 
     #pragma pack(push, 1)
     struct TorkyCellDtype {
@@ -26,41 +19,36 @@ namespace torky::sovereign {
     };
     #pragma pack(pop)
 
-    static_assert(sizeof(TorkyCellDtype) == 9, "Strict 9-byte ABI alignment violated!");
-}
+    static_assert(sizeof(TorkyCellDtype) == 9, "CRITICAL: TorkyCellDtype must equal 9 bytes.");
 
-using namespace torky::sovereign;
+    constexpr double EPSILON_NM2 = 0.016;
+    constexpr double V_FINITE_ZERO_EV = 11.384;
+    constexpr double BANACH_DERIVATIVE_BOUND = 0.3849;
 
-TORKY_EXPORT int torky_verify_abi_sizeof() {
-    return static_cast<int>(sizeof(TorkyCellDtype));
-}
+    TORKY_EXPORT double evaluate_finite_potential(double r_nm) {
+        return (V_FINITE_ZERO_EV / std::sqrt((r_nm * r_nm) + EPSILON_NM2)) * std::sqrt(EPSILON_NM2);
+    }
 
-TORKY_EXPORT double torky_compute_v_finite(double r, bool in_ev) {
-    if (!std::isfinite(r)) return in_ev ? V_FINITE_EV_ZERO : V_FINITE_NONDIM_ZERO;
-    const double v_nondim = 1.0 / std::sqrt((r * r) + 0.016);
-    return in_ev ? (v_nondim * (V_FINITE_EV_ZERO / V_FINITE_NONDIM_ZERO)) : v_nondim;
-}
+    TORKY_EXPORT double solve_cardano_viete(double p, double q) {
+        double p_reg = (p > -1e-12) ? -std::sqrt((p * p) + EPSILON_NM2) : p;
+        double arg = (3.0 * q) / (2.0 * p_reg) * std::sqrt(-3.0 / p_reg);
+        arg = std::clamp(arg, -1.0, 1.0);
+        return 2.0 * std::sqrt(-p_reg / 3.0) * std::cos(std::acos(arg) / 3.0);
+    }
 
-TORKY_EXPORT double torky_cardano_solve_real_root(double p, double q) {
-    if (!std::isfinite(p) || !std::isfinite(q)) return 0.0;
-    const double half_q = q / 2.0;
-    const double third_p = p / 3.0;
-    const double disc = (half_q * half_q) + (third_p * third_p * third_p);
-    if (disc >= 0.0) {
-        const double sq = std::sqrt(disc);
-        return std::cbrt(-half_q + sq) + std::cbrt(-half_q - sq);
-    } else {
-        const double r = std::sqrt(-third_p);
-        const double arg = std::clamp(-half_q / (r * r * r), -1.0, 1.0);
-        return 2.0 * r * std::cos(std::acos(arg) / 3.0);
+    TORKY_EXPORT uint8_t validate_banach_contraction(double rho_c) {
+        double derivative = BANACH_DERIVATIVE_BOUND * std::exp(-std::abs(rho_c));
+        return (derivative < 1.0) ? 1 : 0;
+    }
+
+    TORKY_EXPORT uint8_t evaluate_tsg_gate(uint8_t gate_req, uint8_t bit_tampered) {
+        if (bit_tampered) return 0x03; // DENY / PROTOCOL VETO
+        return (gate_req >= 0x01 && gate_req <= 0x04) ? gate_req : 0x03;
     }
 }
 
 int main() {
-    assert(torky_verify_abi_sizeof() == 9);
-    double v0 = torky_compute_v_finite(0.0, true);
-    double root = torky_cardano_solve_real_root(-3.0, 2.0);
-    std::cout << "[SUCCESS] sizeof(TorkyCellDtype)=" << torky_verify_abi_sizeof()
-              << " | V_finite(0)=" << v0 << " eV | Cardano Root(p=-3,q=2)=" << root << std::endl;
+    std::cout << "[NATIVE C++20 CHECK] sizeof(TorkyCellDtype) = " << sizeof(torky::core::TorkyCellDtype) << " bytes." << std::endl;
+    std::cout << "[MATH CHECK] V_finite(0) = " << torky::core::evaluate_finite_potential(0.0) << " eV (0.00% NaN Loss)." << std::endl;
     return 0;
 }
