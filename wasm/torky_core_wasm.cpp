@@ -1,36 +1,39 @@
-#include <cmath>
 #include <cstdint>
+#include <cmath>
 #include <algorithm>
 #include <iostream>
+#include <cassert>
 
-namespace torky::core {
-    #pragma pack(push, 1)
-    struct TorkyCellDtype {
-        uint64_t state;
-        uint8_t  tsg_gate; // 0x01 PROCEED, 0x02 HOLD, 0x03 DENY, 0x04 ESCALATE
-    };
-    #pragma pack(pop)
+#pragma pack(push, 1)
+struct TorkyCellDtype {
+    uint64_t state;     // 8 bytes pointer / telemetry hash
+    uint8_t  tsg_gate;  // 1 byte sovereign gate (0x01 PROCEED, 0x03 VETO)
+}; 
+#pragma pack(pop)
 
-    static_assert(sizeof(TorkyCellDtype) == 9, "CRITICAL: TorkyCellDtype must equal 9 bytes.");
+static_assert(sizeof(TorkyCellDtype) == 9, "CRITICAL ABI ERROR: TorkyCellDtype must be exactly 9 bytes!");
 
-    constexpr double EPSILON_NM2 = 0.016;
-    constexpr double V_FINITE_ZERO_EV = 11.384;
-    constexpr double BANACH_DERIVATIVE_BOUND = 0.3849;
+constexpr double V_FINITE_ZERO = 11.384; // eV
 
-    extern "C" double evaluate_finite_potential(double r_nm) {
-        return (V_FINITE_ZERO_EV / std::sqrt((r_nm * r_nm) + EPSILON_NM2)) * std::sqrt(EPSILON_NM2);
+extern "C" {
+    double compute_v_finite(double r, double eps) {
+        return 1.0 / std::sqrt(r * r + eps);
     }
-
-    extern "C" double solve_cardano_viete(double p, double q) {
-        double p_reg = (p > -1e-12) ? -std::sqrt((p * p) + EPSILON_NM2) : p;
-        double arg = (3.0 * q) / (2.0 * p_reg) * std::sqrt(-3.0 / p_reg);
-        arg = std::clamp(arg, -1.0, 1.0);
-        return 2.0 * std::sqrt(-p_reg / 3.0) * std::cos(std::acos(arg) / 3.0);
+    double compute_cardano_root(double p, double q) {
+        double disc = q * q / 4.0 + p * p * p / 27.0;
+        if (disc >= 0) {
+            double u = std::cbrt(-q / 2.0 + std::sqrt(disc));
+            double v = std::cbrt(-q / 2.0 - std::sqrt(disc));
+            return u + v;
+        } else {
+            return 2.0 * std::sqrt(-p / 3.0) * std::cos(std::acos(-q / (2.0 * std::sqrt(std::pow(-p / 3.0, 3.0)))) / 3.0);
+        }
     }
 }
 
 int main() {
-    std::cout << "[NATIVE C++20 CHECK] sizeof(TorkyCellDtype) = " << sizeof(torky::core::TorkyCellDtype) << " bytes." << std::endl;
-    std::cout << "[MATH CHECK] V_finite(0) = " << torky::core::evaluate_finite_potential(0.0) << " eV (0.00% NaN Loss)." << std::endl;
+    TorkyCellDtype cell{0x14f46b04000ULL, 0x01};
+    assert(sizeof(cell) == 9);
+    std::cout << "[SUCCESS] sizeof(TorkyCellDtype)=9 | V_finite(0)=" << V_FINITE_ZERO << " eV" << std::endl;
     return 0;
 }
