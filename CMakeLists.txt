@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(torky-workspace-ui CXX)
+project(sovereign_engine CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include_directories(include)
-add_executable(test_workspace_ui tests/test_workspace_ui.cpp)
