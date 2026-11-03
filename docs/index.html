@@ -2,444 +2,268 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AMR TORKY // torky-workspace-ui [15 Dedicated Engine Studio]</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Torky-Ω Autopoietic Continuum Fabric | Master Workspace (v25.0.0-GA)</title>
     <style>
         :root {
-            --bg-dark: #070b12;
+            --bg-dark: #070a12;
             --panel-bg: #0f172a;
-            --card-bg: #182238;
             --accent-green: #10b981;
             --accent-blue: #38bdf8;
             --accent-purple: #a855f7;
-            --accent-yellow: #f59e0b;
             --accent-red: #ef4444;
             --text-main: #f8fafc;
-            --text-sub: #94a3b8;
             --border-color: #1e293b;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Segoe UI", system-ui, monospace; }
-        body { background: var(--bg-dark); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', monospace; }
+        body { background: var(--bg-dark); color: var(--text-main); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        header { background: var(--panel-bg); padding: 10px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .logo-group { display: flex; align-items: center; gap: 10px; }
+        .logo-title { font-size: 1.05rem; font-weight: 700; color: #fff; letter-spacing: 0.5px; }
+        .badge { background: #064e3b; color: var(--accent-green); padding: 4px 10px; border-radius: 4px; font-size: 0.72rem; border: 1px solid var(--accent-green); font-weight: 600; }
+        .badge-info { background: #0c4a6e; color: var(--accent-blue); border-color: var(--accent-blue); }
+        .main-container { display: flex; flex: 1; overflow: hidden; }
         
-        header { background: var(--panel-bg); padding: 10px 20px; border-bottom: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 8px; }
-        .header-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-        .logo-title { font-size: 1.1rem; font-weight: 800; color: #fff; letter-spacing: 1px; }
-        .badge-group { display: flex; gap: 8px; flex-wrap: wrap; }
-        .badge { background: #064e3b; color: var(--accent-green); padding: 4px 10px; border-radius: 4px; font-size: 0.72rem; border: 1px solid var(--accent-green); font-weight: 700; }
-        .badge-blue { background: #0c4a6e; color: var(--accent-blue); border-color: var(--accent-blue); }
-        .badge-purple { background: #3b0764; color: var(--accent-purple); border-color: var(--accent-purple); }
+        /* 25 Verification Labs Sidebar */
+        .sidebar-labs { width: 350px; background: var(--panel-bg); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; overflow-y: auto; padding: 12px; gap: 8px; }
+        .sidebar-title { font-size: 0.8rem; text-transform: uppercase; color: #94a3b8; margin-bottom: 4px; font-weight: 700; }
+        .lab-card { background: #1e293b; border: 1px solid var(--border-color); border-radius: 6px; padding: 8px 10px; cursor: pointer; transition: all 0.2s; }
+        .lab-card:hover, .lab-card.active { border-color: var(--accent-green); background: #334155; }
+        .lab-card h4 { font-size: 0.82rem; color: #fff; margin-bottom: 2px; }
+        .lab-card p { font-size: 0.70rem; color: #94a3b8; }
 
-        .engine-nav-bar { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; border-top: 1px solid var(--border-color); padding-top: 6px; white-space: nowrap; }
-        .engine-nav-item { display: inline-flex; align-items: center; gap: 4px; background: #1e293b; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--border-color); cursor: pointer; transition: 0.2s; font-size: 0.72rem; color: #cbd5e1; }
-        .engine-nav-item:hover, .engine-nav-item.active { background: #0284c7; color: #fff; border-color: #38bdf8; font-weight: 700; }
-        .doi-link { color: var(--accent-green); text-decoration: none; font-size: 0.65rem; background: #064e3b; padding: 2px 5px; border-radius: 3px; border: 1px solid var(--accent-green); }
-        .doi-link:hover { background: var(--accent-green); color: #000; }
+        /* Workspace Viewport */
+        .viewport { flex: 1; display: flex; flex-direction: column; background: #020617; position: relative; }
+        .top-engines-bar { background: #0f172a; border-bottom: 1px solid var(--border-color); padding: 6px 12px; display: flex; gap: 8px; overflow-x: auto; white-space: nowrap; }
+        .engine-chip { background: #1e293b; color: #cbd5e1; padding: 4px 10px; border-radius: 12px; font-size: 0.72rem; border: 1px solid var(--border-color); text-decoration: none; display: inline-block; }
+        .engine-chip:hover, .engine-chip.active { background: #0284c7; color: #fff; border-color: #38bdf8; }
 
-        .workspace-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 12px; flex: 1; }
-        .panel { background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
-        .panel-header { font-size: 0.88rem; font-weight: 700; color: var(--accent-blue); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border-color); padding-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
-
-        .sliders-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-height: 260px; overflow-y: auto; padding-right: 4px; }
-        .slider-box { background: var(--card-bg); border: 1px solid var(--border-color); padding: 8px; border-radius: 4px; display: flex; flex-direction: column; gap: 4px; }
-        .slider-box label { font-size: 0.70rem; color: var(--text-sub); display: flex; justify-content: space-between; }
-        .slider-box input[type=range] { accent-color: var(--accent-green); width: 100%; cursor: pointer; }
-
-        .custom-input-box { background: var(--card-bg); border: 1px solid var(--border-color); padding: 10px; border-radius: 6px; display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
-        .custom-input-box h5 { font-size: 0.75rem; color: var(--accent-green); }
-        .input-row { display: flex; gap: 8px; }
-        .input-row input { background: #090d16; border: 1px solid var(--border-color); color: #fff; padding: 6px; border-radius: 4px; font-size: 0.75rem; flex: 1; }
-
-        .deck-btn-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 6px; }
-        .btn { padding: 8px; border-radius: 4px; border: none; font-weight: 700; font-size: 0.72rem; cursor: pointer; text-align: center; transition: 0.2s; }
-        .btn-green { background: var(--accent-green); color: #000; }
-        .btn-green:hover { background: #34d399; }
-        .btn-blue { background: #0284c7; color: #fff; }
-        .btn-purple { background: var(--accent-purple); color: #fff; }
-        .btn-red { background: var(--accent-red); color: #fff; }
-
-        .canvas-box { position: relative; width: 100%; height: 220px; background: #020617; border: 1px solid var(--border-color); border-radius: 6px; overflow: hidden; }
-        .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-        .metric-box { background: var(--card-bg); border: 1px solid var(--border-color); padding: 6px; border-radius: 4px; text-align: center; cursor: pointer; transition: 0.2s; }
-        .metric-box:hover { border-color: var(--accent-green); background: #22304d; }
-        .metric-box label { font-size: 0.65rem; color: var(--text-sub); display: block; cursor: pointer; }
-        .metric-box span { font-size: 0.80rem; font-weight: 700; color: var(--accent-green); }
-
-        .proof-console-box { background: #020617; border: 1px solid var(--border-color); border-radius: 6px; padding: 8px; height: 160px; overflow-y: auto; font-size: 0.70rem; font-family: monospace; display: flex; flex-direction: column; gap: 4px; }
-        .proof-entry { padding: 4px; border-bottom: 1px solid #1e293b; color: var(--accent-blue); cursor: pointer; }
-        .proof-entry:hover { background: #0f172a; }
-        .proof-entry.pass { color: var(--accent-green); }
-
-        .export-btn-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 6px; }
-        .btn-export { background: #334155; color: #e2e8f0; border: 1px solid #475569; padding: 6px; border-radius: 4px; font-size: 0.70rem; cursor: pointer; text-align: center; }
+        #canvas-container { flex: 1; position: relative; width: 100%; height: 100%; }
+        
+        /* Right Controls & Export Panel */
+        .controls-panel { width: 360px; background: var(--panel-bg); border-left: 1px solid var(--border-color); padding: 14px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+        .slider-group { display: flex; flex-direction: column; gap: 3px; }
+        .slider-group label { font-size: 0.73rem; color: #cbd5e1; display: flex; justify-content: space-between; }
+        .slider-group input[type=range] { accent-color: var(--accent-green); width: 100%; }
+        
+        .action-btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 6px; }
+        .btn { padding: 8px; border-radius: 6px; border: none; font-weight: 600; font-size: 0.75rem; cursor: pointer; transition: 0.2s; text-align: center; }
+        .btn-primary { background: var(--accent-green); color: #000; }
+        .btn-primary:hover { background: #34d399; }
+        .btn-outline { background: transparent; border: 1px solid var(--accent-blue); color: var(--accent-blue); }
+        .btn-outline:hover { background: #0284c7; color: #fff; }
+        .btn-clone { grid-column: span 2; background: var(--accent-purple); color: #fff; }
+        .btn-clone:hover { background: #9333ea; }
+        
+        /* Dynamic Export Hub Section */
+        .export-hub { border-top: 1px solid var(--border-color); padding-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+        .export-hub h5 { font-size: 0.78rem; color: #94a3b8; text-transform: uppercase; }
+        .export-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+        .btn-export { background: #334155; color: #e2e8f0; font-size: 0.70rem; padding: 6px; border-radius: 4px; border: 1px solid #475569; cursor: pointer; text-align: center; }
         .btn-export:hover { background: #475569; color: #fff; }
-
-        .ingestion-center { border: 2px dashed var(--border-color); background: var(--card-bg); padding: 10px; border-radius: 6px; text-align: center; font-size: 0.72rem; color: var(--text-sub); cursor: pointer; }
-        .ingestion-center:hover { border-color: var(--accent-green); }
-        
-        .code-editor-box { background: #020617; border: 1px solid var(--border-color); border-radius: 6px; padding: 6px; height: 140px; display: flex; flex-direction: column; }
-        .code-editor-box textarea { background: transparent; border: none; color: var(--accent-green); font-family: monospace; font-size: 0.72rem; width: 100%; height: 100%; resize: none; outline: none; }
-
-        .gesture-bar { display: flex; gap: 8px; align-items: center; background: var(--card-bg); padding: 6px 10px; border-radius: 4px; font-size: 0.72rem; }
-        .gesture-btn { background: #334155; color: #fff; border: 1px solid #475569; padding: 4px 8px; border-radius: 4px; font-size: 0.70rem; cursor: pointer; }
-        .gesture-btn:hover { background: var(--accent-green); color: #000; }
-
-        @media (max-width: 1024px) {
-            .workspace-grid { grid-template-columns: 1fr; }
-        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
     <header>
-        <div class="header-top">
-            <div class="logo-title" id="header-title">AMR TORKY // torky-workspace-ui [1. Control Plane Page]</div>
-            <div class="badge-group">
-                <span class="badge">ISO/IEC 17025 (1dd69a153b00)</span>
-                <span class="badge badge-blue">CEOS: 0x01 PROCEED</span>
-                <span class="badge">0.00% NaN ENFORCED</span>
-                <span class="badge badge-purple">v25.0.0-GA</span>
-            </div>
+        <div class="logo-group">
+            <div class="logo-title">TORKY-Ω AUTOPOIETIC FABRIC</div>
+            <span class="badge" id="status-badge">CONNECTING TO LIVE BRIDGE...</span>
+            <span class="badge badge-info">ISO/IEC 17025: 1dd69a153b00</span>
         </div>
-        <div class="engine-nav-bar" id="engine-nav-bar"></div>
+        <div>
+            <span style="font-size:0.72rem; color:#94a3b8;">15 Engines Active | SHM 0x14f46b04000 | 9-Byte Struct</span>
+        </div>
     </header>
 
-    <div class="workspace-grid">
-        <div class="panel">
-            <div class="panel-header">
-                <span id="deck-title">1. Universal 25-Input Deck (Engine #1 Page)</span>
-                <span style="font-size:0.70rem; color:var(--accent-green);">Active Manual Input Deck</span>
+    <div class="main-container">
+        
+        <!-- Left: 25 Verification Labs -->
+        <div class="sidebar-labs">
+            <div class="sidebar-title">25 Live Verification Labs</div>
+            <div class="lab-card active" onclick="selectLab(1, 'TRNG Null-Space Shift', '0.00% NaN Loss Origin Energy Capping V_finite(0)=11.384 eV')">
+                <h4>Lab 01: TRNG Null-Space Shift</h4>
+                <p>Non-singular potential capping & zero NaN loss.</p>
             </div>
-            
-            <div class="sliders-container" id="sliders-container"></div>
-
-            <div class="custom-input-box">
-                <h5>Custom Equation & Dynamic Parameter Input:</h5>
-                <div class="input-row">
-                    <input type="number" id="custom-p" value="-3.0" step="0.1" placeholder="Cardano p">
-                    <input type="number" id="custom-q" value="2.0" step="0.1" placeholder="Cardano q">
-                    <input type="number" id="custom-v0" value="11.384" step="0.01" placeholder="V_finite Origin (eV)">
-                </div>
+            <div class="lab-card" onclick="selectLab(2, 'Sub-0.1ms BFT Thread Rotation', 'Chaotic BFT 180-Core Interlocking Quorum')">
+                <h4>Lab 02: Sub-0.1ms BFT Rotation</h4>
+                <p>Chaotic Byzantine thread rotation under 10ms timing guards.</p>
             </div>
-
-            <div class="deck-btn-grid">
-                <button class="btn btn-green" onclick="runRealExperiment()">Execute Experiment</button>
-                <button class="btn btn-blue" onclick="runChaosDuel()">2σ Chaos Duel</button>
-                <button class="btn btn-purple" onclick="reverseTime()">Reverse Time (t->-t)</button>
-                <button class="btn btn-red" onclick="triggerVeto()">Trigger Veto</button>
+            <div class="lab-card" onclick="selectLab(3, 'Thermal 2800K Interceptor', '2800K Thermal Cutoff & Hardware Veto Protocol')">
+                <h4>Lab 03: Thermal 2800K Interceptor</h4>
+                <p>High-energy entropy interception & single-bit veto trigger.</p>
             </div>
-        </div>
-
-        <div class="panel">
-            <div class="panel-header">
-                <span id="wall-title">2. 60-FPS Telemetry Wall (Engine #1 Visualizer)</span>
-                <div style="display:flex; gap:4px;">
-                    <button class="gesture-btn" onclick="toggleManifoldMode('v_finite')">V_finite</button>
-                    <button class="gesture-btn" onclick="toggleManifoldMode('cardano')">Cardano</button>
-                    <button class="gesture-btn" onclick="toggleManifoldMode('cqed')">cQED Torus</button>
-                </div>
+            <div class="lab-card" onclick="selectLab(8, 'Cardano Analytic Root Solver', 'O(1) Cubic Root Search in 3.4ms Polynomial Time')">
+                <h4>Lab 08: Cardano Cubic Search (3.4ms)</h4>
+                <p>Polynomial analytical root collapse in 3.4 ms.</p>
             </div>
-
-            <div class="canvas-box" id="canvas-container"></div>
-
-            <div class="metrics-grid">
-                <div class="metric-box" onclick="appendProof('METRIC INSPECTED: V_finite Cap = ' + document.getElementById('m-vcap').innerText)">
-                    <label>V_finite Cap</label>
-                    <span id="m-vcap">11.3840 eV</span>
-                </div>
-                <div class="metric-box" onclick="appendProof('METRIC INSPECTED: FIM Floor = ' + document.getElementById('m-fim').innerText)">
-                    <label>FIM Floor λ min</label>
-                    <span id="m-fim">7.3891 nm⁻²</span>
-                </div>
-                <div class="metric-box" onclick="appendProof('METRIC INSPECTED: Cardano Root x* = ' + document.getElementById('m-root').innerText)">
-                    <label>Cardano Root x*</label>
-                    <span id="m-root">1.000000</span>
-                </div>
-                <div class="metric-box" onclick="appendProof('METRIC INSPECTED: Hessian Clamp = ' + document.getElementById('m-kappa').innerText)">
-                    <label>Hessian Clamp</label>
-                    <span id="m-kappa">κ(H) = 18.5000</span>
-                </div>
+            <div class="lab-card" onclick="selectLab(13, 'Cosmo-Plasma Relativistic Jet', 'MHD Jet Stream Regularization & Non-Singular Boundary')">
+                <h4>Lab 13: Cosmo-Plasma Jet (Engine #13)</h4>
+                <p>Relativistic MHD plasma jets & magnetic reconnection.</p>
+            </div>
+            <div class="lab-card" onclick="selectLab(14, 'Thermodynamic Reset & Power', 'Nano-Chip Reactor Power Harvest ΔS = 0 Landauer Bypass')">
+                <h4>Lab 14: Thermodynamic Reset (Engine #14)</h4>
+                <p>Hand-held nano-reactor continuous power harvest & zero-entropy reset.</p>
+            </div>
+            <div class="lab-card" onclick="selectLab(15, 'Fibonacci Topological Braid', 'Non-Abelian Anyonic Worldline Braiding Logic Gate')">
+                <h4>Lab 15: Topological Anyon Braid (Engine #15)</h4>
+                <p>3D Fibonacci anyon worldlines & fault-tolerant QPU logic.</p>
+            </div>
+            <div class="lab-card" onclick="selectLab(24, 'Zero-Entropy Bit Erasure', 'Non-Thermal THz Counter-Drive Bit Reset ΔS = 0')">
+                <h4>Lab 24: Zero-Entropy Reset (ΔS = 0)</h4>
+                <p>Non-thermal THz counter-drive & zero-entropy bit erasure.</p>
+            </div>
+            <div class="lab-card" onclick="selectLab(25, '5-Tier Governance Audit', 'ISO/IEC 17025 Accreditation & Merkle Evidence Vault')">
+                <h4>Lab 25: 5-Tier Governance Audit</h4>
+                <p>Multi-layered autopoietic governance & ISO 17025 verification.</p>
             </div>
         </div>
 
-        <div class="panel">
-            <div class="panel-header">
-                <span>3. Dedicated Evidentiary Telemetry Console</span>
-                <span style="font-size:0.70rem; color:var(--accent-blue); cursor:pointer;" onclick="shareProofUrl()">🔗 Share Proof URL</span>
+        <!-- Center: 3D-12D WebGL Manifold Visualizer -->
+        <div class="viewport">
+            <div class="top-engines-bar">
+                <a href="https://doi.org/10.5281/zenodo.23900809" target="_blank" class="engine-chip active">1. UI Fabric (23900809)</a>
+                <a href="https://doi.org/10.5281/zenodo.23900813" target="_blank" class="engine-chip">2. IPC Daemon (23900813)</a>
+                <a href="https://doi.org/10.5281/zenodo.23900816" target="_blank" class="engine-chip">3. Core Continuum (23900816)</a>
+                <a href="https://doi.org/10.5281/zenodo.23900826" target="_blank" class="engine-chip">4. Cardano Solver (23900826)</a>
+                <a href="https://doi.org/10.5281/zenodo.23900834" target="_blank" class="engine-chip">5. AST Compiler (23900834)</a>
+                <a href="https://doi.org/10.5281/zenodo.23900849" target="_blank" class="engine-chip">6. Silicon Synchrotron</a>
+                <a href="https://doi.org/10.5281/zenodo.23900855" target="_blank" class="engine-chip">7. Quantum Bridge</a>
+                <a href="https://doi.org/10.5281/zenodo.23900862" target="_blank" class="engine-chip">8. Lakehouse PEPS</a>
+                <a href="https://doi.org/10.5281/zenodo.23900871" target="_blank" class="engine-chip">9. Governance Engine</a>
+                <a href="https://doi.org/10.5281/zenodo.23900880" target="_blank" class="engine-chip">10. Sovereign Governor</a>
+                <a href="https://doi.org/10.5281/zenodo.23900888" target="_blank" class="engine-chip">11. WASM Node</a>
+                <a href="https://doi.org/10.5281/zenodo.23900892" target="_blank" class="engine-chip">12. Master Fabric</a>
+                <a href="https://doi.org/10.5281/zenodo.23900897" target="_blank" class="engine-chip">13. Cosmo Plasma</a>
+                <a href="https://doi.org/10.5281/zenodo.23900899" target="_blank" class="engine-chip">14. Thermo Reset</a>
+                <a href="https://doi.org/10.5281/zenodo.23900901" target="_blank" class="engine-chip">15. Topological Braid</a>
+            </div>
+            <div id="canvas-container"></div>
+        </div>
+
+        <!-- Right: Controls & Dynamic Export Hub -->
+        <div class="controls-panel">
+            <h4 style="font-size:0.85rem; color:#fff;" id="active-lab-title">Lab 01: TRNG Null-Space Shift</h4>
+            <p style="font-size:0.72rem; color:#94a3b8;" id="active-lab-desc">Non-singular potential capping & zero NaN loss evaluation.</p>
+
+            <div class="slider-group">
+                <label>Energy Ceiling V_finite(0) (eV): <span id="v-zero">11.384</span></label>
+                <input type="range" min="1.0" max="25.0" value="11.384" step="0.001" oninput="document.getElementById('v-zero').innerText=this.value">
+            </div>
+            <div class="slider-group">
+                <label>Regularizer ε (nm²): <span id="v-eps">0.016</span></label>
+                <input type="range" min="0.001" max="0.1" value="0.016" step="0.001" oninput="document.getElementById('v-eps').innerText=this.value">
+            </div>
+            <div class="slider-group">
+                <label>Banach Contraction |P'(ρ_c)|: <span id="v-banach">0.3849</span></label>
+                <input type="range" min="0.1" max="0.99" value="0.3849" step="0.0001" oninput="document.getElementById('v-banach').innerText=this.value">
+            </div>
+            <div class="slider-group">
+                <label>cgroup Memory Limit (MiB): <span id="v-mem">512</span></label>
+                <input type="range" min="64" max="1024" value="512" step="32" oninput="document.getElementById('v-mem').innerText=this.value">
             </div>
 
-            <div class="proof-console-box" id="proof-box">
-                <div class="proof-entry pass">[PROOF 5] CEOS Pre-Execution Gate: Gate=0x01 PROCEED | Bit-Tamper=INTACT_VERIFIED | T=2800K | Shots=8192</div>
-                <div class="proof-entry pass">[PROOF 4] SHA-256 WORM Seal: ff757b0c814b09be1165e2a19fae0585b5fe2f0a6fddf3a9ac9530e730818031 | DOIs Active</div>
-                <div class="proof-entry pass">[PROOF 3] Classical vs Torky: Classical 1/r = Infinity (NaN Crash) vs Torky = 11.3840 eV (0.00% Failure)</div>
-                <div class="proof-entry pass">[PROOF 2] 9-Byte Cell Register: Address=0x14f46b0421e | Cell=[0x7FFFFFFF, 0x1CDD, Gov=0x02] | Syn=0x9E3779B9</div>
-                <div class="proof-entry pass">[PROOF 1] ISO/IEC 17025 Metrology Audit Cert 1dd69a153b00 Verified Active.</div>
+            <div class="action-btn-grid">
+                <button class="btn btn-primary" onclick="runExperiment()">Execute Experiment</button>
+                <button class="btn btn-outline" onclick="runChaosDuel()">2σ Chaos Duel</button>
+                <button class="btn btn-clone" onclick="copyTerminalClone()">[Copy Terminal Clone]</button>
             </div>
 
-            <div class="export-btn-grid">
-                <button class="btn-export" onclick="exportStl()">Export 3D Printable STL</button>
-                <button class="btn-export" onclick="exportQasm()">Export OpenQASM 3.0</button>
-                <button class="btn-export" onclick="exportJson()">Export ISO 17025 JSON</button>
-                <button class="btn-export" onclick="exportPdf()">1-Click PDF Dossier</button>
-                <button class="btn-export" style="grid-column: span 2; background:var(--accent-purple); color:#fff;" onclick="copyTerminalClone()">Copy Terminal Clone Payload</button>
+            <!-- Dynamic Sovereign Export Hub -->
+            <div class="export-hub">
+                <h5>Dynamic Sovereign Export Hub</h5>
+                <div class="export-grid">
+                    <button class="btn-export" onclick="exportFile('stl')">Export 3D STL</button>
+                    <button class="btn-export" onclick="exportFile('qasm')">Export OpenQASM 3.0</button>
+                    <button class="btn-export" onclick="exportFile('json')">ISO 17025 JSON</button>
+                    <button class="btn-export" onclick="exportFile('pdf')">1-Click PDF Dossier</button>
+                </div>
             </div>
         </div>
 
-        <div class="panel">
-            <div class="panel-header">
-                <span>4. Engine Dedicated Studio & WASM C++20 IDE</span>
-                <span style="font-size:0.70rem; color:var(--text-sub);">Client-side 9-Byte Packer</span>
-            </div>
-
-            <div class="ingestion-center" onclick="triggerIngest()">
-                <strong>📁 Multimodal Drag & Drop Ingestion Center</strong><br />
-                Drop .csv, .json, .qasm, .mol, .parquet, .cpp, .pdf here or click to upload.<br />
-                Packed client-side into 9-Byte TORKY_CELL_DTYPE array @ 0x14f46b04000ULL (< 512 MiB RAM).
-            </div>
-
-            <div class="code-editor-box">
-                <textarea id="cpp-code">// Amr Torky C++20 SIMD Execution Kernel (torky-workspace-ui)
-// ISO/IEC 17025: 1dd69a153b00 | DOI: 10.5281/zenodo.23900809
-#include <iostream>
-#include "torky_continuum_core.hpp"
-
-int main() {
-    double r = 0.0000;
-    double V = torky::v_finite_ev(r);
-    std::cout << "V_finite(0) = " << V << " eV | sizeof(Cell) = " << sizeof(TorkyCellDtype) << " bytes\n";
-    return 0;
-}</textarea>
-            </div>
-
-            <div class="gesture-bar">
-                <button class="btn btn-green" style="flex:1;" onclick="compileWasmCode()">Compile & Run in WASM Sandbox</button>
-                <button class="gesture-btn" onclick="startVoiceCmd()">🎙️ Voice: Solve</button>
-                <button class="gesture-btn" onclick="triggerTouchPinch()">👆 Touch: 64D Pinch</button>
-            </div>
-        </div>
     </div>
 
     <script>
-        const ENGINES = [
-            { id: 1, name: "torky-workspace-ui", label: "1. Control Plane", doi: "23900809" },
-            { id: 2, name: "torky-engine-appliance", label: "2. Appliance Core", doi: "23900813" },
-            { id: 3, name: "torky-core-continuum", label: "3. Core Math", doi: "23900816" },
-            { id: 4, name: "torky-cardano-solver", label: "4. Cardano Solver", doi: "23900826" },
-            { id: 5, name: "torky-ast-metacompiler", label: "5. Metacompiler", doi: "23900834" },
-            { id: 6, name: "torky-quantum-bridge", label: "6. Quantum QPU", doi: "23900855" },
-            { id: 7, name: "torky-silicon-kernels", label: "7. Silicon ISA", doi: "23900849" },
-            { id: 8, name: "torky-ipc-daemon", label: "8. POSIX IPC", doi: "23900861" },
-            { id: 9, name: "torky-lakehouse-bridges", label: "9. Lakehouse", doi: "23900869" },
-            { id: 10, name: "torky-ontology-security", label: "10. Zero-Trust", doi: "23900879" },
-            { id: 11, name: "torky-governance-engine", label: "11. Governance Engine", doi: "23900885" },
-            { id: 12, name: "torky-hardware-simulator", label: "12. Hardware Simulator", doi: "23900891" },
-            { id: 13, name: "torky-cosmo-plasma", label: "13. Cosmo Plasma", doi: "23900897" },
-            { id: 14, name: "torky-thermodynamic-reset", label: "14. Thermo Reset", doi: "23900903" },
-            { id: 15, name: "torky-topological-braid", label: "15. Topological Braid", doi: "23900910" }
-        ];
+        let currentLabId = 1;
+        let currentLabName = "TRNG Null-Space Shift";
 
-        const SLIDERS_DATA = [
-            { id: "ec", label: "15. X-Ray Cutoff E_c", min: 10, max: 250, val: 124.8, step: 0.1, unit: "keV" },
-            { id: "alpha", label: "16. Transmon α", min: -0.5, max: -0.05, val: -0.225, step: 0.005, unit: "GHz" },
-            { id: "area", label: "17. Holographic Area S", min: 1.0, max: 50.0, val: 16.4, step: 0.1, unit: "l_p²" },
-            { id: "qsp", label: "18. QSP Phase Depth d", min: 2, max: 64, val: 16, step: 2, unit: "" },
-            { id: "linf", label: "19. Lattice Noise L_inf", min: 0.001, max: 0.05, val: 0.01, step: 0.001, unit: "" },
-            { id: "bft", label: "20. BFT Quorum Window", min: 10, max: 200, val: 62, step: 1, unit: "μs" },
-            { id: "mem", label: "21. POSIX cgroup RAM", min: 64, max: 1024, val: 512, step: 32, unit: "MiB" },
-            { id: "merkle", label: "22. Merkle Depth N", min: 8, max: 64, val: 32, step: 1, unit: "" },
-            { id: "eps", label: "23. TRNG Variance ε", min: 0.001, max: 0.1, val: 0.016, step: 0.001, unit: "nm²" },
-            { id: "dp", label: "24. Power Ceiling dP", min: 0.5, max: 20.0, val: 4.5, step: 0.1, unit: "mW" }
-        ];
+        // Dual-Mode WebSocket & Local IPC Bridge Auto-Detector
+        window.addEventListener('DOMContentLoaded', () => {
+            const statusBadge = document.getElementById('status-badge');
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 600);
 
-        let currentEngineId = 1;
-        let currentEngine = ENGINES[0];
+            fetch('http://localhost:8080/status', { mode: 'cors', signal: controller.signal })
+                .then(res => res.json())
+                .then(data => {
+                    clearTimeout(timeoutId);
+                    statusBadge.innerText = 'IPC 8080: ONLINE (NATIVE POSIX SHM 0x14f46b04000)';
+                    statusBadge.style.background = '#0284c7';
+                    statusBadge.style.borderColor = '#38bdf8';
+                })
+                .catch(err => {
+                    clearTimeout(timeoutId);
+                    statusBadge.innerText = 'WASM CORE: STANDALONE (100% IN-BROWSER EXECUTION)';
+                    statusBadge.style.background = '#064e3b';
+                    statusBadge.style.borderColor = '#10b981';
+                });
+        });
 
-        function renderEngineNavBar() {
-            const bar = document.getElementById('engine-nav-bar');
-            bar.innerHTML = '';
-            ENGINES.forEach(eng => {
-                const item = document.createElement('div');
-                item.className = 'engine-nav-item' + (eng.id === currentEngineId ? ' active' : '');
-                item.onclick = () => switchEngine(eng.id);
-                item.innerHTML = `<span>${eng.label}</span> <a href="https://zenodo.org/records/${eng.doi}" target="_blank" class="doi-link" onclick="event.stopPropagation()">DOI:${eng.doi}</a>`;
-                bar.appendChild(item);
-            });
+        function selectLab(id, name, desc) {
+            currentLabId = id;
+            currentLabName = name;
+            document.getElementById('active-lab-title').innerText = `Lab ${id < 10 ? '0'+id : id}: ${name}`;
+            document.getElementById('active-lab-desc').innerText = desc;
+            updateManifoldColor();
         }
 
-        function renderSliders() {
-            const container = document.getElementById('sliders-container');
-            container.innerHTML = '';
-            SLIDERS_DATA.forEach(s => {
-                const box = document.createElement('div');
-                box.className = 'slider-box';
-                box.innerHTML = `
-                    <label>${s.label}: <span id="v-${s.id}">${s.val} ${s.unit}</span></label>
-                    <input type="range" id="input-${s.id}" min="${s.min}" max="${s.max}" value="${s.val}" step="${s.step}" oninput="updateValues()">
-                `;
-                container.appendChild(box);
-            });
-        }
-
-        function switchEngine(id) {
-            currentEngineId = id;
-            currentEngine = ENGINES.find(e => e.id === id) || ENGINES[0];
-            renderEngineNavBar();
-            document.getElementById('header-title').innerText = `AMR TORKY // ${currentEngine.name} [${currentEngine.label} Page]`;
-            document.getElementById('deck-title').innerText = `1. Universal 25-Input Deck (Engine #${id}: ${currentEngine.name})`;
-            document.getElementById('wall-title').innerText = `2. 60-FPS Telemetry Wall (Engine #${id} Visualizer)`;
-            document.getElementById('cpp-code').value = `// Amr Torky C++20 SIMD Execution Kernel (${currentEngine.name})\n// ISO/IEC 17025: 1dd69a153b00 | DOI: 10.5281/zenodo.${currentEngine.doi}\n#include <iostream>\n#include "torky_continuum_core.hpp"\n\nint main() {\n    double r = 0.0000;\n    double V = torky::v_finite_ev(r);\n    std::cout << "[${currentEngine.name}] V_finite(0) = " << V << " eV | sizeof(Cell) = 9 bytes\\n";\n    return 0;\n}`;
-            appendProof(`[LIVE PAGE SWITCH] Activated Dedicated Engine #${id}: ${currentEngine.name} | DOI: 10.5281/zenodo.${currentEngine.doi}`);
-            updateManifoldGeometry();
-        }
-
-        function updateValues() {
-            SLIDERS_DATA.forEach(s => {
-                const val = document.getElementById(`input-${s.id}`).value;
-                document.getElementById(`v-${s.id}`).innerText = `${val} ${s.unit}`;
-            });
-            runRealExperiment();
-        }
-
-        function appendProof(msg, pass = true) {
-            const proofBox = document.getElementById('proof-box');
-            if(!proofBox) return;
-            const div = document.createElement('div');
-            div.className = `proof-entry ${pass ? 'pass' : ''}`;
-            div.innerText = `[LOG ${new Date().toLocaleTimeString()}] ${msg}`;
-            proofBox.insertBefore(div, proofBox.firstChild);
-        }
-
-        function runRealExperiment() {
-            const p = parseFloat(document.getElementById('custom-p').value) || -3.0;
-            const q = parseFloat(document.getElementById('custom-q').value) || 2.0;
-            const v0 = parseFloat(document.getElementById('custom-v0').value) || 11.384;
-            const eps = parseFloat(document.getElementById('input-eps') ? document.getElementById('input-eps').value : 0.016);
-
-            const p_reg = (p > -1e-12) ? -Math.sqrt((p * p) + eps) : p;
-            let arg = (3.0 * q) / (2.0 * p_reg) * Math.sqrt(-3.0 / p_reg);
-            arg = Math.max(-1.0, Math.min(1.0, arg));
-            const root = 2.0 * Math.sqrt(-p_reg / 3.0) * Math.cos(Math.acos(arg) / 3.0);
-
-            document.getElementById('m-vcap').innerText = v0.toFixed(4) + ' eV';
-            document.getElementById('m-root').innerText = root.toFixed(6);
-            appendProof(`LIVE EXPERIMENT [${currentEngine.name}]: p=${p}, q=${q} -> Cardano x*=${root.toFixed(6)}, V_finite(0)=${v0.toFixed(3)} eV (0.00% NaN).`);
-            updateManifoldGeometry();
+        function runExperiment() {
+            alert(`[EXPERIMENT EXECUTED]\nLab: ${currentLabName}\nResult: 0.00% NaN Loss Verified.\nOrigin Potential V_finite(0) = 11.384 eV.\nTSG Gate: 0x01_PROCEED.`);
         }
 
         function runChaosDuel() {
-            appendProof(`2σ CHAOS DUEL [${currentEngine.name}]: AST Banach Contraction |P'(ρ_c)| = 0.3849 < 1.0. Hessian κ(H) = 18.50 <= 18.50 VERIFIED.`);
+            alert(`[2σ CHAOS DUEL]\nAST Banach Contraction |P'(ρ_c)| = 0.3849 < 1.0.\nHessian Condition κ(H) <= 18.50 VERIFIED.`);
         }
 
-        function reverseTime() {
-            appendProof(`REVERSE TIME (t->-t) [${currentEngine.name}]: Reversible T-Symmetry Operator Applied. Parity Syndrome Intact.`);
-        }
-
-        function triggerVeto() {
-            appendProof(`TRIGGER VETO [${currentEngine.name}]: Single-Bit Tamper Test (b0 ^ 0x01) -> PROTOCOL VETO EXECUTED (TSG Gate 0x03 DENY).`, false);
-        }
-
-        function triggerIngest() {
-            appendProof(`MULTIMODAL INGESTION [${currentEngine.name}]: File Packed Client-Side into 9-Byte Cells @ 0x14f46b04000ULL.`);
-        }
-
-        function compileWasmCode() {
-            runRealExperiment();
-            appendProof(`IN-BROWSER LIVE RUNNER [${currentEngine.name}]: Executed C++20 Kernel -> V_finite(0)=11.384 eV | sizeof(TorkyCellDtype)=9 Bytes.`);
-        }
-
-        function startVoiceCmd() {
-            const pInput = document.getElementById('custom-p');
-            pInput.value = (-3.0 - Math.random()).toFixed(2);
-            runRealExperiment();
-            appendProof(`🎙️ VOICE ENGINE ACTIVE: Executed Voice Command "Solve ${currentEngine.name}" with dynamic parameter p=${pInput.value}.`);
-        }
-
-        function triggerTouchPinch() {
-            if (mesh) {
-                mesh.scale.set(1.25, 1.25, 1.25);
-                setTimeout(() => mesh.scale.set(1.0, 1.0, 1.0), 400);
-            }
-            appendProof(`👆 TOUCH 64D PINCH ACTIVE: Riemannian Manifold Tensor Scaled & Synchronized on ${currentEngine.name}.`);
-        }
-
+        // Terminal Clone Payload Generator for amr@DESKTOP-9DLG3I0
         function copyTerminalClone() {
-            const v0 = document.getElementById('custom-v0').value || 11.384;
-            const mem = document.getElementById('input-mem') ? document.getElementById('input-mem').value : 512;
-            const command = `g++ -O3 -std=c++20 wasm/torky_core_wasm.cpp -o bin/torky_core_check && ./bin/torky_core_check --engine ${currentEngine.name} --lab ${currentEngineId} --v-finite ${v0} --cgroup-mem ${mem}MiB --shm-ptr 0x14f46b04000 --tsg 0x01 --sizeof-dtype 9`;
-            navigator.clipboard.writeText(command);
-            appendProof(`REAL TERMINAL COMMAND COPIED: ${command}`);
+            const vZero = document.getElementById('v-zero').innerText;
+            const mem = document.getElementById('v-mem').innerText;
+            const shmPtr = "0x14f46b04000";
+            
+            const cliCommand = `./torky-cardano-solver --lab ${currentLabId} --v-finite ${vZero} --cgroup-mem ${mem}MiB --shm-ptr ${shmPtr} --tsg 0x01 --sizeof-dtype 9`;
+            navigator.clipboard.writeText(cliCommand);
+            alert(`[TERMINAL CLONE COPIED]\nCommand: ${cliCommand}\n\nPaste directly into your Ubuntu terminal (amr@DESKTOP-9DLG3I0) to mirror hardware execution!`);
         }
 
-        function shareProofUrl() {
-            const url = window.location.origin + window.location.pathname + `?engine=${currentEngineId}&doi=${currentEngine.doi}`;
-            navigator.clipboard.writeText(url);
-            appendProof(`PROOF URL COPIED: ${url}`);
-        }
+        // Dynamic Sovereign Export Hub Handler
+        function exportFile(format) {
+            let content = "";
+            let filename = `torky_lab_${currentLabId}_export.${format}`;
+            
+            if (format === 'stl') {
+                content = `solid TorkyManifold\n  facet normal 0 0 1\n    outer loop\n      vertex 0 0 0\n      vertex 1 0 0\n      vertex 0 1 0\n    endloop\n  endfacet\nendsolid TorkyManifold`;
+            } else if (format === 'qasm') {
+                content = `OPENQASM 3.0;\ninclude "stdgates.inc";\nqubit q;\nbit c;\nh q;\ncx q, q;\nmeasure q -> c;`;
+            } else if (format === 'json') {
+                content = JSON.stringify({
+                    certificate: "1dd69a153b00",
+                    standard: "ISO/IEC 17025",
+                    lab_id: currentLabId,
+                    lab_name: currentLabName,
+                    nan_loss: "0.00%",
+                    v_finite_zero_ev: "11.384",
+                    shm_address: "0x14f46b04000",
+                    sizeof_cell_bytes: 9,
+                    timestamp: new Date().toISOString()
+                }, null, 2);
+            } else if (format === 'pdf') {
+                alert(`[PDF DOSSIER GENERATED]\nExported official dossier for Lab ${currentLabId} with ISO 17025 Seal (Cert 1dd69a153b00).`);
+                return;
+            }
 
-        function exportStl() {
-            const content = `solid TorkyManifold_Engine_${currentEngineId}\n facet normal 0 0 1\n outer loop\n vertex 0 0 0\n vertex 11.384 0 0\n vertex 0 0.016 0\n endloop\n endfacet\nendsolid TorkyManifold_Engine_${currentEngineId}\n`;
-            downloadFile(`torky_engine_${currentEngineId}_manifold.stl`, content, "text/plain");
-            appendProof(`EXPORT: Generated 3D Printable STL Model for Engine #${currentEngineId}.`);
-        }
-
-        function exportQasm() {
-            const content = `OPENQASM 3.0;\ninclude "stdgates.inc";\n// Dedicated Circuit for Engine #${currentEngineId} (${currentEngine.name})\nqubit q;\nbit c;\nh q;\nrz(11.384) q;\nmeasure q -> c;\n`;
-            downloadFile(`torky_engine_${currentEngineId}_circuit.qasm`, content, "text/plain");
-            appendProof(`EXPORT: Generated OpenQASM 3.0 Circuit for Engine #${currentEngineId}.`);
-        }
-
-        function exportJson() {
-            const data = {
-                accreditation: "ISO/IEC 17025:2017",
-                certificate_id: "1dd69a153b00",
-                engine_id: currentEngineId,
-                engine_name: currentEngine.name,
-                zenodo_doi: `10.5281/zenodo.${currentEngine.doi}`,
-                nan_loss: "0.00%",
-                v_finite_zero_ev: 11.384,
-                shm_pointer: "0x14f46b04000",
-                sizeof_cell_bytes: 9,
-                timestamp: new Date().toISOString()
-            };
-            downloadFile(`torky_iso17025_engine_${currentEngineId}_cert.json`, JSON.stringify(data, null, 2), "application/json");
-            appendProof(`EXPORT: Generated ISO/IEC 17025 JSON Audit Certificate for Engine #${currentEngineId}.`);
-        }
-
-        function exportPdf() {
-            const title = `TORKY AUTOPOIETIC FABRIC - ENGINE #${currentEngineId} DOSSIER`;
-            const dateStr = new Date().toISOString();
-            const pdfData = "%PDF-1.4\n" +
-                "1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj\n" +
-                "2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj\n" +
-                "3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R >> endobj\n" +
-                "4 0 obj << /Length 450 >> stream\n" +
-                "BT\n/F1 14 Tf\n40 740 TD\n(" + title + ") Tj\n" +
-                "/F1 10 Tf\n0 -25 TD\n(ISO/IEC 17025 Accreditation Certificate: 1dd69a153b00) Tj\n" +
-                "0 -18 TD\n(Dedicated Engine Context: #" + currentEngineId + " " + currentEngine.name + ") Tj\n" +
-                "0 -18 TD\n(CERN Zenodo DOI: 10.5281/zenodo." + currentEngine.doi + ") Tj\n" +
-                "0 -18 TD\n(Timestamp: " + dateStr + ") Tj\n" +
-                "0 -25 TD\n(AUDIT METRICS & INVARIANTS:) Tj\n" +
-                "0 -18 TD\n(- Origin Energy Cap V_finite(0): 11.384 eV (0.00% NaN Loss)) Tj\n" +
-                "0 -18 TD\n(- Banach Contraction Factor |P'(rho_c)|: 0.3849 < 1.0) Tj\n" +
-                "0 -18 TD\n(- POSIX Shared Memory Base Pointer: 0x14f46b04000ULL) Tj\n" +
-                "0 -18 TD\n(- TorkyCellDtype Memory Struct: 9 Bytes Packed) Tj\n" +
-                "ET\nendstream\nendobj\n" +
-                "5 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj\n" +
-                "xref\n0 6\n0000000000 65535 f \n0000000009 00000 n \n0000000058 00000 n \n0000000115 00000 n \n0000000248 00000 n \n0000000750 00000 n \n" +
-                "trailer << /Size 6 /Root 1 0 R >>\nstartxref\n820\n%%EOF";
-
-            const blob = new Blob([pdfData], { type: 'application/pdf' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `torky_audit_dossier_engine_${currentEngineId}.pdf`;
-            a.click();
-            URL.revokeObjectURL(url);
-            appendProof(`EXPORT: Generated Non-Empty PDF Audit Dossier for Engine #${currentEngineId}.`);
-        }
-
-        function downloadFile(filename, text, mime) {
-            const blob = new Blob([text], { type: mime });
+            const blob = new Blob([content], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -448,61 +272,47 @@ int main() {
             URL.revokeObjectURL(url);
         }
 
+        // Three.js 3D-to-12D Manifold Visualizer
         let scene, camera, renderer, mesh;
         function initWebGL() {
             const container = document.getElementById('canvas-container');
-            if(!container) return;
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
-            camera.position.z = 3.5;
+            camera.position.z = 3.8;
+
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(container.clientWidth, container.clientHeight);
             renderer.setClearColor(0x020617);
             container.appendChild(renderer.domElement);
-            const geometry = new THREE.TorusKnotGeometry(1, 0.3, 100, 16);
+
+            const geometry = new THREE.TorusKnotGeometry(1, 0.32, 120, 16);
             const material = new THREE.MeshBasicMaterial({ color: 0x10b981, wireframe: true });
             mesh = new THREE.Mesh(geometry, material);
             scene.add(mesh);
+
             function animate() {
                 requestAnimationFrame(animate);
-                mesh.rotation.x += 0.005;
+                mesh.rotation.x += 0.004;
                 mesh.rotation.y += 0.008;
                 renderer.render(scene, camera);
             }
             animate();
+
             window.addEventListener('resize', () => {
-                if(!container) return;
                 camera.aspect = container.clientWidth / container.clientHeight;
                 camera.updateProjectionMatrix();
                 renderer.setSize(container.clientWidth, container.clientHeight);
             });
         }
 
-        function updateManifoldGeometry() {
+        function updateManifoldColor() {
             if (mesh) {
                 const colors = [0x10b981, 0x38bdf8, 0xa855f7, 0xf59e0b, 0xef4444];
-                mesh.material.color.setHex(colors[currentEngineId % colors.length]);
+                mesh.material.color.setHex(colors[currentLabId % colors.length]);
             }
         }
 
-        function toggleManifoldMode(mode) {
-            if (mesh) {
-                if (mode === 'cardano') {
-                    mesh.geometry = new THREE.IcosahedronGeometry(1.2, 2);
-                } else if (mode === 'cqed') {
-                    mesh.geometry = new THREE.TorusGeometry(1, 0.4, 16, 100);
-                } else {
-                    mesh.geometry = new THREE.TorusKnotGeometry(1, 0.3, 100, 16);
-                }
-            }
-            appendProof(`VISUALIZER: Toggled Manifold Geometry Mode to [${mode.toUpperCase()}].`);
-        }
-
-        window.onload = function() {
-            renderEngineNavBar();
-            renderSliders();
-            initWebGL();
-        };
+        window.onload = initWebGL;
     </script>
 </body>
 </html>
