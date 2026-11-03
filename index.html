@@ -659,7 +659,8 @@ function generateTerminalPayload() {
   const tsgHex = "0x0" + tsgState.toString(16);
   const shmHex = "0x" + (BigInt(0x14f46b04000) + BigInt((currentLabId - 1) * 9)).toString(16);
 
-  const cmd = `./${activeEngine.name} --lab ${String(currentLabId).padStart(2,'0')} --p ${pVal} --q ${qVal} --ec ${ecVal} --bft-us ${bftVal} --shm-ptr ${shmHex} --tsg ${tsgHex} --v-finite 11.384`;
+  // توجيه المسار التنفيذي للمحرك الصحيح في جذر المنظومة أو تشغيله عبر بايثون السابورتر
+  const cmd = `cd ~/dad_phone/torky_enterprise_fabric && ./${activeEngine.name}/build/${activeEngine.name} --lab ${String(currentLabId).padStart(2,'0')} --p ${pVal} --q ${qVal} --ec ${ecVal} --bft-us ${bftVal} --shm-ptr ${shmHex} --tsg ${tsgHex} --v-finite 11.384 || python3 ${activeEngine.name}/custom_input_runner.py`;
   const preview = document.getElementById("cli-command-preview");
   if (preview) preview.textContent = cmd;
   logTerminal(`  [CLI PAYLOAD] ${cmd}`);
