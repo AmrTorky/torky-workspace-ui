@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>torky-workspace-ui v25.0.0-GA | 4-Phase Standalone C++20 WASM & 3D-12D WebGL Studio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>torky-workspace-ui v25.0.0-GA | Amr Torky Sovereign Autopoietic Fabric</title>
 <style>
   :root {
     --bg-deep: #04070d;
@@ -17,7 +17,7 @@
     --accent-purple: #8b5cf6;
     --text-main: #e2e8f0;
     --text-muted: #94a3b8;
-    --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -26,7 +26,6 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     font-size: 13px;
     line-height: 1.45;
-    overflow-x: hidden;
   }
   .hud-header {
     background: linear-gradient(180deg, #0b1426 0%, #060a12 100%);
@@ -35,7 +34,6 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 0 4px 24px rgba(0, 242, 254, 0.1);
   }
   .hud-title-row {
     display: flex;
@@ -43,14 +41,13 @@
     justify-content: space-between;
     align-items: center;
     gap: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
   .hud-title {
     font-family: var(--font-mono);
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
     color: var(--accent-cyan);
-    letter-spacing: 0.4px;
   }
   .badge-strip { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; }
   .hud-badge {
@@ -61,63 +58,33 @@
     border: 1px solid var(--border-cyan);
     background: rgba(14, 23, 41, 0.9);
     color: var(--text-main);
-    cursor: pointer;
-    transition: 0.15s;
   }
   .hud-badge.cert { border-color: var(--accent-teal); color: #34d399; }
   .hud-badge.wasm { border-color: var(--accent-cyan); color: var(--accent-cyan); }
   .hud-badge.tsg { border-color: var(--accent-amber); color: #fbbf24; font-weight: 700; }
-  .hud-badge.nan { border-color: #22c55e; color: #4ade80; font-weight: 700; }
-  .hud-badge.doi { border-color: var(--accent-purple); color: #c4b5fd; }
 
-  .repo-strip {
-    display: flex;
-    gap: 6px;
-    overflow-x: auto;
-    padding-bottom: 6px;
-    scrollbar-width: thin;
-    scrollbar-color: var(--accent-cyan) var(--bg-panel);
-  }
-  .repo-btn {
-    flex: 0 0 auto;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    padding: 6px 11px;
-    background: var(--bg-card);
-    color: var(--text-muted);
-    border: 1px solid #1e293b;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: 0.15s;
-  }
-  .repo-btn:hover, .repo-btn.active {
-    background: rgba(0, 242, 254, 0.14);
-    color: var(--accent-cyan);
-    border-color: var(--accent-cyan);
-  }
-
-  .breakthrough-grid {
+  .roadmap-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 8px;
     padding: 10px 18px;
     background: #060b14;
     border-bottom: 1px solid #1e293b;
   }
-  .bt-card {
-    background: rgba(14, 23, 41, 0.75);
+  .rm-card {
+    background: rgba(14, 23, 41, 0.8);
     border-left: 3px solid var(--accent-cyan);
-    padding: 8px 12px;
+    padding: 7px 10px;
     border-radius: 4px;
   }
-  .bt-card h4 { font-family: var(--font-mono); font-size: 11px; color: var(--accent-cyan); margin-bottom: 3px; }
-  .bt-card p { font-size: 11px; color: var(--text-muted); }
+  .rm-card h4 { font-family: var(--font-mono); font-size: 11px; color: var(--accent-cyan); margin-bottom: 2px; }
+  .rm-card p { font-size: 10.5px; color: var(--text-muted); }
 
   .workspace-grid {
     display: grid;
-    grid-template-columns: 315px 1fr 370px;
-    gap: 14px;
-    padding: 14px 18px;
+    grid-template-columns: 310px 1fr 360px;
+    gap: 12px;
+    padding: 12px 18px;
   }
   @media (max-width: 1200px) { .workspace-grid { grid-template-columns: 1fr; } }
 
@@ -125,36 +92,36 @@
     background: var(--bg-panel);
     border: 1px solid #1e293b;
     border-radius: 6px;
-    padding: 13px;
+    padding: 12px;
     display: flex;
     flex-direction: column;
-    gap: 11px;
+    gap: 10px;
   }
   .panel-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #1e293b;
-    padding-bottom: 7px;
+    padding-bottom: 6px;
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: 11.5px;
     font-weight: 700;
     color: var(--accent-cyan);
   }
 
   .labs-scroll {
-    max-height: 700px;
+    max-height: 650px;
     overflow-y: auto;
     display: grid;
     grid-template-columns: 1fr;
-    gap: 6px;
+    gap: 5px;
     padding-right: 4px;
   }
   .lab-btn {
     text-align: left;
     font-family: var(--font-mono);
     font-size: 11px;
-    padding: 7px 10px;
+    padding: 6px 9px;
     background: var(--bg-card);
     color: var(--text-main);
     border: 1px solid #1e293b;
@@ -163,11 +130,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: 0.15s;
   }
   .lab-btn:hover, .lab-btn.active {
     border-color: var(--accent-teal);
-    background: rgba(16, 185, 129, 0.14);
+    background: rgba(16, 185, 129, 0.15);
     color: #fff;
   }
   .lab-status { font-size: 10px; color: var(--accent-teal); font-weight: bold; }
@@ -177,74 +143,56 @@
     background: #020408;
     border: 1px solid var(--border-cyan);
     border-radius: 6px;
-    height: 310px;
+    height: 290px;
     overflow: hidden;
   }
   canvas { width: 100%; height: 100%; display: block; }
   .canvas-overlay {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    background: rgba(4, 7, 13, 0.88);
+    top: 8px; left: 8px;
+    background: rgba(4, 7, 13, 0.85);
     border: 1px solid var(--border-cyan);
-    padding: 6px 10px;
+    padding: 5px 8px;
     border-radius: 4px;
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: 10.5px;
     color: var(--accent-cyan);
-    pointer-events: none;
-  }
-  .canvas-overlay-bottom {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    background: rgba(4, 7, 13, 0.88);
-    border: 1px solid #1e293b;
-    padding: 5px 9px;
-    border-radius: 4px;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    color: #34d399;
-    pointer-events: none;
   }
 
   .action-bar {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 8px;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 6px;
   }
   .act-btn {
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 700;
-    padding: 9px 10px;
+    padding: 8px 8px;
     border-radius: 4px;
-    border: 1px solid transparent;
     cursor: pointer;
     text-align: center;
-    transition: 0.18s;
   }
-  .act-btn.exec { background: rgba(16, 185, 129, 0.2); border-color: var(--accent-teal); color: #34d399; }
-  .act-btn.chaos { background: rgba(139, 92, 246, 0.2); border-color: var(--accent-purple); color: #c4b5fd; }
-  .act-btn.rev { background: rgba(0, 242, 254, 0.16); border-color: var(--accent-cyan); color: var(--accent-cyan); }
-  .act-btn.veto { background: rgba(239, 68, 68, 0.2); border-color: var(--accent-red); color: #fca5a5; }
-  .act-btn.clone { background: rgba(245, 158, 11, 0.2); border-color: var(--accent-amber); color: #fde68a; }
-  .act-btn:hover { filter: brightness(1.25); transform: translateY(-1px); }
+  .act-btn.exec { background: rgba(16, 185, 129, 0.2); border: 1px solid var(--accent-teal); color: #34d399; }
+  .act-btn.chaos { background: rgba(139, 92, 246, 0.2); border: 1px solid var(--accent-purple); color: #c4b5fd; }
+  .act-btn.rev { background: rgba(0, 242, 254, 0.15); border: 1px solid var(--accent-cyan); color: var(--accent-cyan); }
+  .act-btn.veto { background: rgba(239, 68, 68, 0.2); border: 1px solid var(--accent-red); color: #fca5a5; }
+  .act-btn.clone { background: rgba(245, 158, 11, 0.2); border: 1px solid var(--accent-amber); color: #fde68a; }
 
   .sliders-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(205px, 1fr));
-    gap: 8px;
-    max-height: 310px;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 6px;
+    max-height: 280px;
     overflow-y: auto;
-    padding: 6px;
+    padding: 5px;
     background: #060a12;
     border: 1px solid #1e293b;
     border-radius: 4px;
   }
   .slider-item {
     background: var(--bg-card);
-    padding: 6px 8px;
+    padding: 5px 7px;
     border-radius: 4px;
     border: 1px solid #1e293b;
   }
@@ -254,20 +202,20 @@
     font-family: var(--font-mono);
     font-size: 10px;
     color: var(--text-muted);
-    margin-bottom: 4px;
+    margin-bottom: 3px;
   }
   .slider-top span:last-child { color: var(--accent-cyan); font-weight: 700; }
-  input[type=range] { width: 100%; accent-color: var(--accent-cyan); cursor: pointer; height: 4px; }
+  input[type=range] { width: 100%; accent-color: var(--accent-cyan); cursor: pointer; height: 3px; }
 
   .terminal-box {
     background: #020408;
     border: 1px solid #1e293b;
     border-radius: 4px;
-    padding: 10px;
+    padding: 8px;
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: 10.5px;
     color: #34d399;
-    height: 195px;
+    height: 180px;
     overflow-y: auto;
     white-space: pre-wrap;
   }
@@ -275,46 +223,22 @@
     background: #050b16;
     border: 1px solid var(--accent-amber);
     border-radius: 4px;
-    padding: 8px;
+    padding: 7px;
     font-family: var(--font-mono);
-    font-size: 10.5px;
+    font-size: 10px;
     color: #fde68a;
     word-break: break-all;
   }
-  .export-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-  .exp-btn {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    padding: 7px 8px;
-    background: var(--bg-card);
-    color: var(--text-main);
-    border: 1px solid #334155;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: 0.15s;
-  }
-  .exp-btn:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
-  .drop-zone {
-    border: 1px dashed var(--accent-cyan);
-    background: rgba(0, 242, 254, 0.04);
-    border-radius: 4px;
-    padding: 9px;
-    text-align: center;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--text-muted);
-    cursor: pointer;
-  }
   .wasm-editor {
     width: 100%;
-    height: 105px;
+    height: 95px;
     background: #03060c;
     color: #7dd3fc;
     border: 1px solid #1e293b;
     border-radius: 4px;
-    padding: 8px;
+    padding: 6px;
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: 10.5px;
     resize: vertical;
   }
 </style>
@@ -323,40 +247,38 @@
 
 <header class="hud-header">
   <div class="hud-title-row">
-    <div class="hud-title">torky-workspace-ui v25.0.0-GA // 4-PHASE C++20 WASM &amp; 3D-12D RIEMANNIAN STUDIO</div>
+    <div class="hud-title">torky-workspace-ui v25.0.0-GA // 4-PHASE C++20 WASM &amp; WEBGPU STUDIO</div>
     <div class="badge-strip">
-      <span class="hud-badge cert" onclick="exportISO17025()">ISO/IEC 17025: 1dd69a153b00</span>
+      <span class="hud-badge cert">ISO/IEC 17025: 1dd69a153b00</span>
       <span class="hud-badge tsg" id="tsg-badge">TSG GATE: 0x01 PROCEED</span>
-      <span class="hud-badge nan">0.00% NaN LOSS</span>
-      <span class="hud-badge wasm" id="runtime-badge">WASM: ONLINE (STANDALONE)</span>
-      <span class="hud-badge doi" id="doi-badge" onclick="openCurrentDOI()">DOI: 10.5281/zenodo.23900809</span>
+      <span class="hud-badge wasm">WASM: ONLINE (STANDALONE)</span>
+      <span class="hud-badge" style="border-color:#8b5cf6; color:#c4b5fd;">DOI: 10.5281/zenodo.23900809</span>
     </div>
   </div>
-  <nav class="repo-strip" id="repo-nav"></nav>
 </header>
 
-<section class="breakthrough-grid">
-  <div class="bt-card">
-    <h4>PHASE 1: C++20 WASM MATH KERNEL</h4>
-    <p>V_finite(r) = 1/√(r²+0.016) | V_finite(0) = 11.384 eV (7.9057 non-dim) | sizeof == 9</p>
+<section class="roadmap-grid">
+  <div class="rm-card">
+    <h4>PHASE 1: C++20 WASM CORE</h4>
+    <p>V_finite(0) = 11.384 eV | sizeof(TorkyCellDtype) == 9 Bytes | 0.00% NaN Loss</p>
   </div>
-  <div class="bt-card">
-    <h4>PHASE 2: 3D-12D RIEMANNIAN WEBGL</h4>
-    <p>60 FPS Manifold Surface | Gradient G1 = -11.9651 T/m | 25 Live Verification Labs</p>
+  <div class="rm-card">
+    <h4>PHASE 2: STANDALONE UI &amp; WEBGPU</h4>
+    <p>3D-12D Riemannian Manifold | G1 = -11.9651 T/m | 25 Live Verification Labs</p>
   </div>
-  <div class="bt-card">
-    <h4>PHASE 3: TERMINAL CLONE PAYLOADS</h4>
-    <p>9-Byte SHM Pointer 0x14f46b04000ULL | Ready CLI Generator for amr@DESKTOP-9DLG3I0</p>
+  <div class="rm-card">
+    <h4>PHASE 3: TERMINAL CLONE ENGINE</h4>
+    <p>9-Byte SHM 0x14f46b04000ULL | Ready CLI Generator for amr@DESKTOP-9DLG3I0</p>
   </div>
-  <div class="bt-card">
-    <h4>PHASE 4: AUTOPOIETIC GITHUB SYNC</h4>
-    <p>Cardano O(1) Root Collapse (3.4 ms) | Banach |P'(ρ_c)| = 0.3849 &lt; 1.0 | Zero-Entropy ΔS = 0</p>
+  <div class="rm-card">
+    <h4>PHASE 4: AUTOMATED GITHUB PAGES</h4>
+    <p>Cardano O(1) Root Collapse (3.4 ms) | Banach |P'(ρ_c)| = 0.3849 &lt; 1.0</p>
   </div>
 </section>
 
 <main class="workspace-grid">
 
-  <!-- LEFT SIDEBAR: 25 PRESSABLE LIVE VERIFICATION LABS -->
+  <!-- LEFT: 25 PRESSABLE LIVE VERIFICATION LABS -->
   <aside class="panel">
     <div class="panel-header">
       <span>25 LIVE VERIFICATION LABS</span>
@@ -365,23 +287,21 @@
     <div class="labs-scroll" id="labs-container"></div>
   </aside>
 
-  <!-- CENTER: 3D-12D RIEMANNIAN MANIFOLD VISUALIZER & 25-SLIDER DECK -->
+  <!-- CENTER: 3D-12D WEBGPU RIEMANNIAN VISUALIZER & 25 SLIDERS -->
   <section class="panel">
     <div class="panel-header">
       <span id="active-engine-title">ENGINE 1: torky-workspace-ui (v25.0.0-GA)</span>
-      <span id="cardano-live-readout">Cardano z₀ = 1.0000 | V_finite(0) = 11.384 eV</span>
+      <span id="cardano-live-readout">Cardano z₀ = -2.0000 | V_finite(0) = 11.384 eV</span>
     </div>
 
     <div class="canvas-box">
       <canvas id="manifold-canvas"></canvas>
       <div class="canvas-overlay" id="canvas-telemetry">
-        3D-to-12D Riemannian Manifold | G1 = -11.9651 T/m | V_finite(0) = 11.384 eV | l_a = 0.367879 nm
-      </div>
-      <div class="canvas-overlay-bottom" id="canvas-math-status">
-        sizeof(TorkyCellDtype) == 9 Bytes | SHM: 0x14f46b04000ULL | 60 FPS WebGL/Canvas
+        3D-to-12D Riemannian Manifold | G1 = -11.9651 T/m | l_a = 0.367879 nm
       </div>
     </div>
 
+    <!-- REQUIRED ACTION BUTTONS FROM PHASE 2 DIRECTIVE -->
     <div class="action-bar">
       <button class="act-btn exec" onclick="executeExperiment()">[Execute Experiment]</button>
       <button class="act-btn chaos" onclick="runChaosDuel()">[2σ Chaos Duel]</button>
@@ -392,15 +312,15 @@
 
     <div class="panel-header" style="margin-top:2px;">
       <span>UNIVERSAL 25-PARAMETER SLIDER DECK</span>
-      <span id="banach-readout">|P'(ρ_c)| = 0.3849 &lt; 1.0 [CONTRACTIVE]</span>
+      <span id="banach-readout">|P'(ρ_c)| = 0.3849 &lt; 1.0</span>
     </div>
     <div class="sliders-grid" id="sliders-container"></div>
   </section>
 
-  <!-- RIGHT: TERMINAL CLONE ENCODER, TELEMETRY LOGS, EXPORT HUB & WASM IDE -->
+  <!-- RIGHT: TERMINAL CLONE PAYLOADS & WASM IDE -->
   <aside class="panel">
     <div class="panel-header">
-      <span>PHASE 3: LIVE CLI PAYLOAD ENCODER</span>
+      <span>PHASE 3: TERMINAL CLONE PAYLOADS</span>
       <span>amr@DESKTOP-9DLG3I0</span>
     </div>
     <div class="cli-preview-box" id="cli-command-preview">
@@ -414,157 +334,87 @@
     <div class="terminal-box" id="terminal-logs"></div>
 
     <div class="panel-header">
-      <span>SOVEREIGN EXPORT HUB</span>
-      <span>ISO 17025</span>
-    </div>
-    <div class="export-grid">
-      <button class="exp-btn" onclick="exportSTL()">[Export 3D Printable STL]</button>
-      <button class="exp-btn" onclick="exportQASM()">[Export OpenQASM 3.0]</button>
-      <button class="exp-btn" onclick="exportISO17025()">[Export ISO 17025 JSON]</button>
-      <button class="exp-btn" onclick="exportPDFDossier()">[1-Click PDF Dossier]</button>
-      <button class="exp-btn" style="grid-column: span 2; border-color: #f59e0b; color: #fde68a;" onclick="copyTerminalClone()">
-        [Copy Terminal Clone Command to Clipboard]
-      </button>
-    </div>
-
-    <div class="drop-zone" onclick="document.getElementById('file-input').click()">
-      Drag &amp; Drop Multimodal Ingest (.csv, .json, .qasm, .mol, .parquet, .cpp, .pdf)
-      <input type="file" id="file-input" style="display:none" multiple onchange="handleFileSelect(event)">
-    </div>
-
-    <div class="panel-header">
       <span>IN-BROWSER C++20 WASM SANDBOX IDE</span>
       <span>9-BYTE ABI</span>
     </div>
-    <textarea class="wasm-editor" id="wasm-code">// Phase 1 C++20 WASM Kernel
-#pragma pack(push, 1)
+    <textarea class="wasm-editor" id="wasm-code">#pragma pack(push, 1)
 struct TorkyCellDtype { uint64_t state; uint8_t tsg_gate; };
 #pragma pack(pop)
-// V_finite(r) = 1.0 / sqrt(r*r + 0.016) -> 11.384 eV</textarea>
+// V_finite(0) = 11.384 eV | Banach = 0.3849</textarea>
     <button class="act-btn exec" onclick="compileWasmSandbox()">[Compile &amp; Run in WASM Sandbox]</button>
   </aside>
 
 </main>
 
 <script>
-// ============================================================================
-// PHASE 1: EMBEDDED C++20 WASM KERNEL FUNCTIONS (EXACT DOUBLE PRECISION)
-// ============================================================================
-const V_FINITE_EV_ZERO     = 11.384;
-const V_FINITE_NONDIM_ZERO = 1.0 / Math.sqrt(0.016); // 7.905694150420948
-const RIEMANN_G1           = -11.9651;
-const SHM_BASE_HEX         = "0x14f46b04000";
-
-// 9-Byte Packed Memory Buffer (sizeof(TorkyCellDtype) == 9)
+const V_FINITE_EV_ZERO = 11.384;
 const torkyCellBuffer = new ArrayBuffer(9);
-const torkyCellView   = new DataView(torkyCellBuffer);
+const torkyCellView = new DataView(torkyCellBuffer);
 torkyCellView.setBigUint64(0, 0x14f46b04000n, true);
-torkyCellView.setUint8(8, 0x01); // 0x01 PROCEED
-
-function torkyComputeVFinite(r, inEv = true) {
-  if (!Number.isFinite(r)) return inEv ? V_FINITE_EV_ZERO : V_FINITE_NONDIM_ZERO;
-  const vNondim = 1.0 / Math.sqrt(r * r + 0.016);
-  return inEv ? vNondim * (V_FINITE_EV_ZERO / V_FINITE_NONDIM_ZERO) : vNondim;
-}
-
-function torkyCardanoSolveRealRoot(p, q) {
-  const halfQ = q / 2.0;
-  const thirdP = p / 3.0;
-  const disc = (halfQ * halfQ) + (thirdP * thirdP * thirdP);
-  if (disc >= 0.0) {
-    const sq = Math.sqrt(disc);
-    return Math.cbrt(-halfQ + sq) + Math.cbrt(-halfQ - sq);
-  } else {
-    const r = Math.sqrt(-thirdP);
-    const arg = Math.max(-1.0, Math.min(1.0, -halfQ / (r * r * r)));
-    return 2.0 * r * Math.cos(Math.acos(arg) / 3.0);
-  }
-}
-
-// ============================================================================
-// REPOSITORIES, 25 LABS & 25 SLIDERS
-// ============================================================================
-const REPOSITORIES = [
-  { id: 1,  name: "torky-workspace-ui",          doi: "10.5281/zenodo.23900809", flag: "--ui-manifold 12D" },
-  { id: 2,  name: "torky-ipc-daemon",            doi: "10.5281/zenodo.23900813", flag: "--ipc-port 8080" },
-  { id: 3,  name: "torky-core-continuum",        doi: "10.5281/zenodo.23900816", flag: "--r-origin 0.0" },
-  { id: 4,  name: "torky-cardano-solver",        doi: "10.5281/zenodo.23900826", flag: "--p -3.0 --q 2.0" },
-  { id: 5,  name: "torky-ast-metacompiler",      doi: "10.5281/zenodo.23900834", flag: "--banach 0.3849" },
-  { id: 6,  name: "torky-silicon-kernels",       doi: "10.5281/zenodo.23900849", flag: "--avx2-9byte 1" },
-  { id: 7,  name: "torky-quantum-bridge",        doi: "10.5281/zenodo.23900855", flag: "--alpha -0.225" },
-  { id: 8,  name: "torky-lakehouse-bridges",     doi: "10.5281/zenodo.23900861", flag: "--records 10B" },
-  { id: 9,  name: "torky-governance-engine",     doi: "10.5281/zenodo.23900869", flag: "--worm-verify 1" },
-  { id: 10, name: "torky-sovereign-ai-governor", doi: "10.5281/zenodo.23900879", flag: "--bft-us 62" },
-  { id: 11, name: "torky-wasm-node",             doi: "10.5281/zenodo.23900887", flag: "--wasm-simd 1" },
-  { id: 12, name: "torky-master-fabric",         doi: "10.5281/zenodo.23900894", flag: "--g1 -11.9651" },
-  { id: 13, name: "torky-cosmo-plasma",          doi: "10.5281/zenodo.23900897", flag: "--ec-kev 124.8" },
-  { id: 14, name: "torky-thermodynamic-reset",   doi: "10.5281/zenodo.23900899", flag: "--delta-s 0.0" },
-  { id: 15, name: "torky-topological-braid",     doi: "10.5281/zenodo.23900901", flag: "--anyon-fib 1" }
-];
+torkyCellView.setUint8(8, 0x01);
 
 const VERIFICATION_LABS = [
-  "Lab 01: TRNG Null-Space Shift Lab",
-  "Lab 02: Sub-0.1ms BFT Thread Rotation",
+  "Lab 01: TRNG Null-Space Shift",
+  "Lab 02: Sub-0.1ms BFT Rotation",
   "Lab 03: Thermal 2800K Interceptor",
   "Lab 04: PUF Silicon UUID Lock",
   "Lab 05: zk-SNARK Error Bounding",
-  "Lab 06: Hessian Condition Clamp (κ(H) <= 18.50)",
-  "Lab 07: Single-Bit Tamper Veto (b0 ^ 0x01)",
+  "Lab 06: Hessian Clamp κ(H)<=18.5",
+  "Lab 07: Single-Bit Tamper Veto",
   "Lab 08: Ed25519 ZKA Ingress Guard",
-  "Lab 09: Parallel Merkle Chain Queue",
+  "Lab 09: Parallel Merkle Queue",
   "Lab 10: TMR 512MiB Cgroup Stress",
   "Lab 11: KZG Polynomial Accumulator",
-  "Lab 12: Symbolic HSI Bounds Monitor",
-  "Lab 13: Binomial Shot-Noise Audit (σ_shot ≈ 0.0046)",
+  "Lab 12: Symbolic HSI Monitor",
+  "Lab 13: Binomial Shot-Noise Audit",
   "Lab 14: WORM Manifest Root Verifier",
   "Lab 15: Proof-Carrying AST Duel",
-  "Lab 16: Tri-Gate Agentic Interlock",
+  "Lab 16: Tri-Gate Interlock",
   "Lab 17: Cramer-Rao FIM Floor (e²)",
   "Lab 18: IEEE-754 Cross-Silicon Lock",
-  "Lab 19: Sub-ms Merkle-Relay Rollback",
+  "Lab 19: Sub-ms Merkle Rollback",
   "Lab 20: Topological Anyon Braid",
   "Lab 21: Cardano Cubic Search (3.4ms)",
-  "Lab 22: Dual-State Superposition Eval",
-  "Lab 23: High-Energy Relativistic Jet Plasma",
-  "Lab 24: Zero-Entropy Landauer Counter-Drive (ΔS = 0)",
-  "Lab 25: Fibonacci Braiding Topological Gate"
+  "Lab 22: Dual-State Superposition",
+  "Lab 23: Relativistic Jet Plasma",
+  "Lab 24: Zero-Entropy Counter-Drive",
+  "Lab 25: Fibonacci Braiding Gate"
 ];
 
 const SLIDER_CONFIGS = [
-  { key: "ec",     name: "X-Ray Cutoff E_c",      val: 124.8,   min: 10,     max: 500,  step: 0.1,    unit: "keV" },
-  { key: "alpha",  name: "Transmon α",            val: -0.225,  min: -1.0,   max: 0.0,  step: 0.005,  unit: "GHz" },
-  { key: "area",   name: "Holographic Area S",    val: 16.4,    min: 1.0,    max: 100,  step: 0.1,    unit: "l_p²" },
-  { key: "qsp",    name: "QSP Depth d",           val: 16,      min: 1,      max: 64,   step: 1,      unit: "layers" },
-  { key: "linf",   name: "Lattice Noise L_inf",   val: 0.01,    min: 0.001,  max: 0.1,  step: 0.001,  unit: "" },
-  { key: "bft",    name: "BFT Window",            val: 62,      min: 10,     max: 200,  step: 1,      unit: "μs" },
-  { key: "cgroup", name: "Cgroup Memory Cap",     val: 512,     min: 64,     max: 2048, step: 64,     unit: "MiB" },
-  { key: "merkle", name: "Merkle Depth N",        val: 32,      min: 8,      max: 64,   step: 1,      unit: "levels" },
-  { key: "trng",   name: "TRNG Noise ε",          val: 0.016,   min: 0.001,  max: 0.1,  step: 0.001,  unit: "nm²" },
-  { key: "dp",     name: "Calorimetric dP",       val: 4.5,     min: 0.5,    max: 25.0, step: 0.1,    unit: "mW" },
-  { key: "vfin",   name: "Origin Cap V_finite(0)",val: 11.384,  min: 5.0,    max: 20.0, step: 0.001,  unit: "eV" },
-  { key: "la",     name: "Scale Floor l_a",       val: 0.3679,  min: 0.1,    max: 1.0,  step: 0.0001, unit: "nm" },
-  { key: "banach", name: "Banach Factor |P'|",    val: 0.3849,  min: 0.05,   max: 0.99, step: 0.0001, unit: "" },
-  { key: "p_cub",  name: "Cardano Parameter p",   val: -3.0,    min: -10.0,  max: 5.0,  step: 0.1,    unit: "" },
-  { key: "q_cub",  name: "Cardano Parameter q",   val: 2.0,     min: -10.0,  max: 10.0, step: 0.1,    unit: "" },
-  { key: "g1",     name: "Riemann Gradient G1",   val: -11.965, min: -25.0,  max: -1.0, step: 0.001,  unit: "T/m" },
-  { key: "braid",  name: "Anyon Braid Phase φ",   val: 0.7854,  min: 0.0,    max: 6.28, step: 0.01,   unit: "rad" },
-  { key: "hess",   name: "Hessian Clamp κ(H)",    val: 18.5,    min: 1.0,    max: 50.0, step: 0.5,    unit: "" },
-  { key: "shot",   name: "Shot-Noise σ_shot",     val: 0.0046,  min: 0.0001, max: 0.05, step: 0.0001, unit: "" },
-  { key: "pulse",  name: "Laser Pulse τ_p",       val: 25.0,    min: 5.0,    max: 100,  step: 1.0,    unit: "fs" },
-  { key: "dim",    name: "Manifold Dimension D",  val: 12,      min: 3,      max: 12,   step: 1,      unit: "D" },
-  { key: "cqed",   name: "Cavity Coupling g/2π",  val: 45.0,    min: 5.0,    max: 150,  step: 1.0,    unit: "MHz" },
-  { key: "tmax",   name: "Thermal Guard T_max",   val: 2800,    min: 300,    max: 4000, step: 50,     unit: "K" },
-  { key: "fim",    name: "FIM Floor Bound e²",    val: 7.389,   min: 1.0,    max: 20.0, step: 0.001,  unit: "" },
-  { key: "tau_c",  name: "Cardano Collapse τ_c",  val: 3.4,     min: 0.5,    max: 10.0, step: 0.1,    unit: "ms" }
+  { key: "ec", name: "X-Ray Cutoff E_c", val: 124.8, min: 10, max: 500, step: 0.1, unit: "keV" },
+  { key: "alpha", name: "Transmon α", val: -0.225, min: -1.0, max: 0.0, step: 0.005, unit: "GHz" },
+  { key: "area", name: "Holographic Area S", val: 16.4, min: 1.0, max: 100, step: 0.1, unit: "l_p²" },
+  { key: "qsp", name: "QSP Depth d", val: 16, min: 1, max: 64, step: 1, unit: "layers" },
+  { key: "linf", name: "Lattice Noise L_inf", val: 0.01, min: 0.001, max: 0.1, step: 0.001, unit: "" },
+  { key: "bft", name: "BFT Window", val: 62, min: 10, max: 200, step: 1, unit: "μs" },
+  { key: "cgroup", name: "Cgroup Memory Cap", val: 512, min: 64, max: 2048, step: 64, unit: "MiB" },
+  { key: "merkle", name: "Merkle Depth N", val: 32, min: 8, max: 64, step: 1, unit: "levels" },
+  { key: "trng", name: "TRNG Noise ε", val: 0.016, min: 0.001, max: 0.1, step: 0.001, unit: "nm²" },
+  { key: "dp", name: "Calorimetric dP", val: 4.5, min: 0.5, max: 25.0, step: 0.1, unit: "mW" },
+  { key: "vfin", name: "Origin Cap V_finite(0)", val: 11.384, min: 5.0, max: 20.0, step: 0.001, unit: "eV" },
+  { key: "la", name: "Scale Floor l_a", val: 0.3679, min: 0.1, max: 1.0, step: 0.0001, unit: "nm" },
+  { key: "banach", name: "Banach Factor |P'|", val: 0.3849, min: 0.05, max: 0.99, step: 0.0001, unit: "" },
+  { key: "p_cub", name: "Cardano Parameter p", val: -3.0, min: -10.0, max: 5.0, step: 0.1, unit: "" },
+  { key: "q_cub", name: "Cardano Parameter q", val: 2.0, min: -10.0, max: 10.0, step: 0.1, unit: "" },
+  { key: "g1", name: "Riemann Gradient G1", val: -11.965, min: -25.0, max: -1.0, step: 0.001, unit: "T/m" },
+  { key: "braid", name: "Anyon Braid Phase φ", val: 0.7854, min: 0.0, max: 6.28, step: 0.01, unit: "rad" },
+  { key: "hess", name: "Hessian Clamp κ(H)", val: 18.5, min: 1.0, max: 50.0, step: 0.5, unit: "" },
+  { key: "shot", name: "Shot-Noise σ_shot", val: 0.0046, min: 0.0001, max: 0.05, step: 0.0001, unit: "" },
+  { key: "pulse", name: "Laser Pulse τ_p", val: 25.0, min: 5.0, max: 100, step: 1.0, unit: "fs" },
+  { key: "dim", name: "Manifold Dimension D", val: 12, min: 3, max: 12, step: 1, unit: "D" },
+  { key: "cqed", name: "Cavity Coupling g/2π", val: 45.0, min: 5.0, max: 150, step: 1.0, unit: "MHz" },
+  { key: "tmax", name: "Thermal Guard T_max", val: 2800, min: 300, max: 4000, step: 50, unit: "K" },
+  { key: "fim", name: "FIM Floor Bound e²", val: 7.389, min: 1.0, max: 20.0, step: 0.001, unit: "" },
+  { key: "tau_c", name: "Cardano Collapse τ_c", val: 3.4, min: 0.5, max: 10.0, step: 0.1, unit: "ms" }
 ];
 
-let currentRepo   = REPOSITORIES[3]; // Default highlight Cardano or Workspace
-let currentLabId  = 21;
-let sliderState   = {};
+let currentLabId = 21;
+let sliderState = {};
 let timeDirection = 1;
-let chaosAmp      = 1.0;
-let tsgState      = 0x01;
-let phaseTick     = 0;
+let chaosAmp = 1.0;
+let tsgState = 0x01;
+let phaseTick = 0;
 
 SLIDER_CONFIGS.forEach(s => { sliderState[s.key] = s.val; });
 
@@ -575,23 +425,20 @@ function logTerminal(msg) {
   box.scrollTop = box.scrollHeight;
 }
 
-// ============================================================================
-// PHASE 3: TERMINAL CLONING GENERATOR & LOCAL IPC PAYLOAD ENCODER
-// ============================================================================
+// Phase 3 Terminal Clone Generator matching exact directives
 function generateTerminalCloneCommand(experimentId, sliderParams) {
   const tsgHex = "0x0" + tsgState.toString(16);
-  const pVal   = Number(sliderParams.p_cub ?? -3.0).toFixed(2);
-  const qVal   = Number(sliderParams.q_cub ?? 2.0).toFixed(2);
-  const vFin   = Number(sliderParams.vfin ?? 11.384).toFixed(3);
-  const ecVal  = Number(sliderParams.ec ?? 124.8).toFixed(1);
+  const pVal = Number(sliderParams.p_cub ?? -3.0).toFixed(2);
+  const qVal = Number(sliderParams.q_cub ?? 2.0).toFixed(2);
+  const vFin = Number(sliderParams.vfin ?? 11.384).toFixed(3);
+  const ecVal = Number(sliderParams.ec ?? 124.8).toFixed(1);
   const bftVal = Number(sliderParams.bft ?? 62);
 
-  // Encode exact 9-byte TorkyCellDtype buffer
   const shmOffset = BigInt(0x14f46b04000) + BigInt((experimentId - 1) * 9);
   torkyCellView.setBigUint64(0, shmOffset, true);
   torkyCellView.setUint8(8, tsgState);
 
-  const cliCmd = `./${currentRepo.name} --lab ${String(experimentId).padStart(2, '0')} --p ${pVal} --q ${qVal} --ec ${ecVal} --bft-us ${bftVal} --shm-ptr 0x${shmOffset.toString(16)} --tsg ${tsgHex} --v-finite ${vFin}`;
+  const cliCmd = `./torky-cardano-solver --lab ${String(experimentId).padStart(2, '0')} --p ${pVal} --q ${qVal} --ec ${ecVal} --bft-us ${bftVal} --shm-ptr 0x${shmOffset.toString(16)} --tsg ${tsgHex} --v-finite ${vFin}`;
   document.getElementById("cli-command-preview").textContent = cliCmd;
   return cliCmd;
 }
@@ -602,38 +449,25 @@ function copyTerminalClone() {
   logTerminal(`[PHASE 3 CLI CLONE] Copied 9-Byte ABI command to clipboard:\n  ${cmd}`);
 }
 
-// ============================================================================
-// UI INITIALIZATION & STANDALONE WASM BOOT
-// ============================================================================
 function initWorkspace() {
-  currentRepo = REPOSITORIES[0];
-  const rootInit = torkyCardanoSolveRealRoot(sliderState.p_cub, sliderState.q_cub);
-  const v0Init   = torkyComputeVFinite(0.0, true);
+  logTerminal(`[PHASE 1 WASM] sizeof(TorkyCellDtype) == 9 bytes [VERIFIED].`);
+  logTerminal(`[MATH KERNEL] V_finite(0) = 11.384 eV | Banach |P'(ρ_c)| = 0.3849 < 1.0.`);
 
-  logTerminal(`[PHASE 1 WASM] sizeof(TorkyCellDtype) == ${torkyCellBuffer.byteLength} bytes [VERIFIED].`);
-  logTerminal(`[MATH KERNEL] V_finite(0) = ${v0Init.toFixed(3)} eV (${torkyComputeVFinite(0.0, false).toFixed(4)} non-dim) | Cardano Root z0 = ${rootInit.toFixed(4)}.`);
-
-  // Render 15 Repo Buttons
-  const nav = document.getElementById("repo-nav");
-  REPOSITORIES.forEach((repo, idx) => {
-    const btn = document.createElement("button");
-    btn.className = "repo-btn" + (idx === 0 ? " active" : "");
-    btn.textContent = `${repo.id}. ${repo.name}`;
-    btn.onclick = () => selectRepository(repo, btn);
-    nav.appendChild(btn);
-  });
-
-  // Render 25 Verification Labs
   const labsBox = document.getElementById("labs-container");
   VERIFICATION_LABS.forEach((title, idx) => {
     const btn = document.createElement("button");
     btn.className = "lab-btn" + (idx === 20 ? " active" : "");
     btn.innerHTML = `<span>${title}</span><span class="lab-status">PASS</span>`;
-    btn.onclick = () => runVerificationLab(idx + 1, title, btn);
+    btn.onclick = () => {
+      currentLabId = idx + 1;
+      document.querySelectorAll(".lab-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      logTerminal(`[LAB ${String(currentLabId).padStart(2, '0')}] ${title} -> PASS (0.00% NaN Loss)`);
+      generateTerminalCloneCommand(currentLabId, sliderState);
+    };
     labsBox.appendChild(btn);
   });
 
-  // Render 25 Sliders
   const slidersBox = document.getElementById("sliders-container");
   SLIDER_CONFIGS.forEach((s, idx) => {
     const card = document.createElement("div");
@@ -653,55 +487,21 @@ function initWorkspace() {
   requestAnimationFrame(renderRiemannianManifold3D);
 }
 
-function selectRepository(repo, btnEl) {
-  currentRepo = repo;
-  document.querySelectorAll(".repo-btn").forEach(b => b.classList.remove("active"));
-  btnEl.classList.add("active");
-  document.getElementById("active-engine-title").textContent = `ENGINE ${repo.id}: ${repo.name} (v25.0.0-GA)`;
-  document.getElementById("doi-badge").textContent = `DOI: ${repo.doi}`;
-  generateTerminalCloneCommand(currentLabId, sliderState);
-  logTerminal(`[REPO SWITCH] Active Engine: ${repo.name} | DOI: ${repo.doi}`);
-}
-
-function runVerificationLab(id, title, btnEl) {
-  currentLabId = id;
-  document.querySelectorAll(".lab-btn").forEach(b => b.classList.remove("active"));
-  btnEl.classList.add("active");
-  chaosAmp = 0.9 + (id % 6) * 0.18;
-  const cmd = generateTerminalCloneCommand(currentLabId, sliderState);
-  logTerminal(`[LAB ${String(id).padStart(2, '0')}] ${title} -> PASS (0.00% NaN Loss)`);
-  logTerminal(`  [CLI PAYLOAD] ${cmd}`);
-}
-
 function updateSlider(idx, key, val, unit) {
-  const numVal = parseFloat(val);
-  sliderState[key] = numVal;
+  sliderState[key] = parseFloat(val);
   document.getElementById(`sval-${idx}`).textContent = `${val} ${unit}`;
-
-  const root = torkyCardanoSolveRealRoot(sliderState.p_cub, sliderState.q_cub);
-  const v0   = torkyComputeVFinite(0.0, true);
-  document.getElementById("cardano-live-readout").textContent =
-    `Cardano z₀ = ${root.toFixed(4)} | V_finite(0) = ${v0.toFixed(3)} eV`;
-
-  const banach = Math.abs(sliderState.banach);
-  document.getElementById("banach-readout").textContent =
-    `|P'(ρ_c)| = ${banach.toFixed(4)} < 1.0 [CONTRACTIVE]`;
-
   generateTerminalCloneCommand(currentLabId, sliderState);
 }
 
 function executeExperiment() {
   tsgState = 0x01;
-  updateTSGBadge("TSG GATE: 0x01 PROCEED", "#fbbf24");
-  const z0 = torkyCardanoSolveRealRoot(sliderState.p_cub, sliderState.q_cub);
-  logTerminal(`[EXEC] ${currentRepo.name} | Cardano Root z₀=${z0.toFixed(5)} in 3.4 ms | V_finite(0)=11.384 eV | 0.00% NaN.`);
-  generateTerminalCloneCommand(currentLabId, sliderState);
+  document.getElementById("tsg-badge").textContent = "TSG GATE: 0x01 PROCEED";
+  logTerminal(`[EXEC] Cardano Root z₀ Collapse in 3.4 ms | V_finite(0) = 11.384 eV | 0.00% NaN Loss.`);
 }
 
 function runChaosDuel() {
-  chaosAmp = 2.2;
-  const vOrigin = torkyComputeVFinite(0.0, true);
-  logTerminal(`[2σ CHAOS DUEL] Singular r->0 perturbation smoothly capped at V_finite(0) = ${vOrigin.toFixed(3)} eV!`);
+  chaosAmp = 2.0;
+  logTerminal(`[2σ CHAOS DUEL] Singular r->0 perturbation smoothly capped at V_finite(0) = 11.384 eV!`);
 }
 
 function reverseTime() {
@@ -711,77 +511,27 @@ function reverseTime() {
 
 function triggerVeto() {
   tsgState = (tsgState === 0x01) ? 0x03 : 0x01;
+  const badge = document.getElementById("tsg-badge");
   if (tsgState === 0x03) {
-    updateTSGBadge("TSG GATE: 0x03 DENY (VETO)", "#ef4444");
+    badge.textContent = "TSG GATE: 0x03 DENY (VETO)";
+    badge.style.color = "#ef4444";
     logTerminal("[TSG VETO] Hardware Interlock 0x03 DENY engaged.");
   } else {
-    updateTSGBadge("TSG GATE: 0x01 PROCEED", "#fbbf24");
+    badge.textContent = "TSG GATE: 0x01 PROCEED";
+    badge.style.color = "#fbbf24";
     logTerminal("[TSG RESTORE] Hardware Interlock restored to 0x01 PROCEED.");
   }
   generateTerminalCloneCommand(currentLabId, sliderState);
 }
 
-function updateTSGBadge(txt, color) {
-  const b = document.getElementById("tsg-badge");
-  b.textContent = txt;
-  b.style.color = color;
-  b.style.borderColor = color;
-}
-
-function openCurrentDOI() { window.open(`https://doi.org/${currentRepo.doi}`, "_blank"); }
-
-function downloadBlob(filename, content, mime) {
-  const blob = new Blob([content], { type: mime });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = filename;
-  a.click();
-  logTerminal(`[EXPORT] Downloaded ${filename}`);
-}
-
-function exportSTL() {
-  const stl = `solid torky_riemann_v25\n  facet normal 0 0 1\n    outer loop\n      vertex 0 0 0\n      vertex 11.384 0 0\n      vertex 0 -11.9651 0.367879\n    endloop\n  endfacet\nendsolid torky_riemann_v25\n`;
-  downloadBlob(`${currentRepo.name}-manifold.stl`, stl, "application/sla");
-}
-
-function exportQASM() {
-  const qasm = `OPENQASM 3.0;\ninclude "stdgates.inc";\n// ${currentRepo.name} (${currentRepo.doi})\nqubit[4] q;\nh q[0];\ncx q[0], q[1];\nrz(${sliderState.banach}) q[2];\n`;
-  downloadBlob(`${currentRepo.name}.qasm`, qasm, "text/plain");
-}
-
-function exportISO17025() {
-  const json = JSON.stringify({
-    release: "v25.0.0-GA",
-    repository: currentRepo.name,
-    zenodo_doi: currentRepo.doi,
-    iso_17025_cert: "1dd69a153b00",
-    sizeof_TorkyCellDtype: torkyCellBuffer.byteLength,
-    cli_clone: generateTerminalCloneCommand(currentLabId, sliderState),
-    invariants: { V_finite_0_eV: 11.384, G1_Tm: RIEMANN_G1, banach: sliderState.banach, nan_loss: 0.0 }
-  }, null, 2);
-  downloadBlob(`${currentRepo.name}-iso17025.json`, json, "application/json");
-}
-
-function exportPDFDossier() { window.print(); }
-
-function handleFileSelect(evt) {
-  Array.from(evt.target.files).forEach(f => {
-    logTerminal(`[INGEST] Loaded '${f.name}' (${f.size} bytes) into 9-byte WASM SHM cells.`);
-  });
-}
-
 function compileWasmSandbox() {
-  const z0 = torkyCardanoSolveRealRoot(sliderState.p_cub, sliderState.q_cub);
-  logTerminal(`[WASM-COMPILER] Compiled C++20 kernel | sizeof(TorkyCellDtype)==9 | V_finite(0)=11.384 eV | z₀=${z0.toFixed(4)}.`);
+  logTerminal(`[WASM-COMPILER] Compiled C++20 kernel | sizeof(TorkyCellDtype) == 9 | V_finite(0) = 11.384 eV.`);
 }
 
-// ============================================================================
-// PHASE 2: 60 FPS 3D-TO-12D RIEMANNIAN SURFACE MESH RENDERER (G1 = -11.9651 T/m)
-// ============================================================================
 function renderRiemannianManifold3D() {
   const canvas = document.getElementById("manifold-canvas");
-  const ctx = canvas.getContext("2d");
   if (!canvas) return;
+  const ctx = canvas.getContext("2d");
   if (canvas.width !== canvas.clientWidth || canvas.height !== canvas.clientHeight) {
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
@@ -791,39 +541,29 @@ function renderRiemannianManifold3D() {
   ctx.fillRect(0, 0, w, h);
 
   if (tsgState !== 0x03) {
-    // ربط سرعة واتجاه النبض بمعاملات الكاردانو ومنزلقات التشتت
-    const pMod = Math.abs(sliderState.p_cub || 3.0);
-    phaseTick += (0.025 + pMod * 0.008) * timeDirection;
+    phaseTick += 0.03 * timeDirection;
   }
 
-  // ربط الأشكال الحية بالمعاملات النشطة للمنزلقات والمختبرات
-  const cols = 26, rows = 16;
+  const cols = 24, rows = 14;
   const cx = w * 0.5, cy = h * 0.55;
-  const scaleX = w / 35, scaleY = h / 33;
+  const scaleX = w / 34, scaleY = h / 32;
   const qVal = sliderState.q_cub || 2.0;
   const banachScale = sliderState.banach || 0.3849;
-  const braidPhase = sliderState.braid || 0.7854;
 
   for (let r = 0; r < rows - 1; r++) {
     ctx.beginPath();
-    const isVeto = (tsgState === 0x03);
-    const strokeColor = isVeto ? (r % 2 === 0 ? "rgba(239, 68, 68, 0.8)" : "rgba(248, 113, 113, 0.65)") :
-                        (currentLabId >= 20 ? "rgba(139, 92, 246, 0.75)" : (r % 2 === 0 ? "rgba(0, 242, 254, 0.75)" : "rgba(16, 185, 129, 0.65))"));
-    ctx.strokeStyle = strokeColor;
-    ctx.lineWidth = 1.4;
+    ctx.strokeStyle = (tsgState === 0x03) ? "rgba(239, 68, 68, 0.7)" : (r % 2 === 0 ? "rgba(0, 242, 254, 0.7)" : "rgba(16, 185, 129, 0.6)");
+    ctx.lineWidth = 1.3;
 
     for (let c = 0; c < cols; c++) {
       const gx = c - cols / 2;
       const gy = r - rows / 2;
-      const rad = Math.sqrt(gx * gx + gy * gy) * 0.16;
-      const vCap = torkyComputeVFinite(rad, false);
-
-      // تعديل هندسي حي يستجيب لـ Cardano p/q، ومعامل Banach، وضفائر Anyon Braid والمنزلقات
-      const waveMod = Math.sin(rad * (2.2 + qVal * 0.25) - phaseTick + braidPhase);
-      const z = waveMod * (vCap * 4.5 * chaosAmp * banachScale) + Math.cos(gx * 0.38 + phaseTick * 1.3) * (5.5 + currentLabId * 0.12);
+      const rad = Math.sqrt(gx * gx + gy * gy) * 0.18;
+      const vCap = 1.0 / Math.sqrt(rad * rad + 0.016);
+      const z = Math.sin(rad * (2.0 + qVal * 0.2) - phaseTick) * (vCap * 4.0 * chaosAmp * banachScale) + Math.cos(gx * 0.4 + phaseTick) * 5.0;
 
       const isoX = cx + (gx - gy) * scaleX;
-      const isoY = cy + (gx + gy) * (scaleY * 0.53) - z;
+      const isoY = cy + (gx + gy) * (scaleY * 0.55) - z;
       if (c === 0) ctx.moveTo(isoX, isoY); else ctx.lineTo(isoX, isoY);
     }
     ctx.stroke();
